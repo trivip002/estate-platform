@@ -1,0 +1,133 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/common/tag.jsp"%>
+<c:url var="formUrl" value="/api/admin/customer"/>
+<c:url var="presentForm" value="/admin/customer/edit?id=${model.id}"/>
+<html>
+<head>
+    <title>Chỉnh sửa người dùng</title>
+</head>
+<body>
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+            </script>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="#">Trang chủ</a>
+                </li>
+                <li class="active">Chỉnh sửa khách hàng</li>
+            </ul><!-- /.breadcrumb -->
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form:form id="formEdit" commandName="model" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"  > Tên đăng nhập </label>
+                            <div class="col-sm-9">
+                                <form:input path="name" id = "name" cssClass="form-control"/>
+                            </div>
+
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"  > Số điện thoại </label>
+                            <div class="col-sm-9">
+                                <form:input path="phoneNumber" id = "phoneNumber" cssClass="form-control"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"  > Email </label>
+                            <div class="col-sm-9">
+                                <form:input path="email" id = "email"  cssClass="form-control"/>
+                                <p id="errorEmail"  hidden style="color: red;"> email đã tồn tại</p>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"  >Nhu cầu</label>
+                            <div class="col-sm-9">
+                                <form:input path="need" id = "need"  cssClass="form-control"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"  >Ghi chú</label>
+                            <div class="col-sm-9">
+                                <form:textarea path="note" id = "need"  cssClass="form-control"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="clearfix form-actions">
+                            <div class="col-md-offset-3 col-md-9">
+                                <c:if test="${not empty model.id}">
+                                    <input type="button" class="btn btn-white btn-warning btn-bold" value="Cập nhật khách hàng" id="btnAddOrUpdateCustomer"/>
+                                </c:if>
+                                <c:if test="${empty model.id}">
+                                    <input type="button" class="btn btn-white btn-warning btn-bold" value="Thêm mới khách hàng" id="btnAddOrUpdateCustomer"/>
+                                </c:if>
+                            </div>
+                        </div>
+                        <form:hidden path="id" id="customerId"/>
+                    </form:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+    });
+    $('#btnAddOrUpdateCustomer').click(function (event) {
+        var formData = $("#formEdit").serializeArray();
+        var dataArray = {};
+        $.each(formData,function (i,v) {
+            dataArray[""+v.name+""] = v.value;
+        });
+        var id = $('#customerId').val();
+        if(id == ""){
+            addCustomer(dataArray)
+        }else{
+            updateCustomer(dataArray,id);
+        }
+    });
+
+    function addCustomer(data) {
+        $.ajax({
+            url: '${formUrl}',
+            type: 'POST',
+            dataType: 'json',
+            contentType:'application/json',
+            data: JSON.stringify(data),
+            success: function(res) {
+                window.location.href = "<c:url value='/admin/customer/list?message=insert_success'/>";
+            },
+            error: function(res) {
+                console.log(res);
+                window.location.href = "<c:url value='/admin/customer/list?message=error_system'/>";
+            }
+        });
+    }
+    function updateCustomer(data, id) {
+        $.ajax({
+            url: '${formUrl}/'+id,
+            type: 'PUT',
+            dataType: 'json',
+            contentType:'application/json',
+            data: JSON.stringify(data),
+            success: function(res) {
+
+                window.location.href = "<c:url value='/admin/customer/list?message=update_success'/>";
+            },
+            error: function(res) {
+                window.location.href = "<c:url value='/admin/customer/list?message=error_system'/>";
+            }
+        });
+    }
+</script>
+</body>
+</html>
