@@ -9,7 +9,7 @@
 
     <http auto-config="false" use-expressions="true">
 
-        <intercept-url pattern="/admin/home" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/admin/home" access="hasAnyRole('MANAGER','USER')" />
 
         <access-denied-handler error-page="/access-denied" />
         <form-login  login-page="/dang-nhap"

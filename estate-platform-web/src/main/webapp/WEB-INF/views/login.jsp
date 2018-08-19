@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@include file="/common/tag.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@include file="/common/taglib.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -31,14 +31,17 @@
                     <fieldset>
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" id="username" name="j_username" placeholder="Tên đăng nhập" required>
+															<input type="text" class="form-control" id="username"
+                                                                   name="j_username" placeholder="Tên đăng nhập"
+                                                                   required>
 
 														</span>
                         </label>
 
                         <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" id="password" name="j_password" placeholder="Mật khẩu" required>
+															<input type="password" class="form-control" id="password"
+                                                                   name="j_password" placeholder="Mật khẩu" required>
 														</span>
                         </label>
 

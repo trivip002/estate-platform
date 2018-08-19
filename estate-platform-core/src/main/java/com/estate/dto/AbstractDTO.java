@@ -16,7 +16,7 @@ public class AbstractDTO<T> implements Serializable
     private List<T> listResult;
     private String tableId = "tableList";
     private int totalItems = 0;
-    private int maxPageItems = 6;
+    private int maxPageItems = 4;
     private String searchValue;
     private int page = 1;
     private String sortExpression;

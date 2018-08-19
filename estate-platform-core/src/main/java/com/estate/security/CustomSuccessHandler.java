@@ -32,7 +32,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler
         String url = "";
         List<String> roles = SecurityUtils.getAuthorities();
         if (isUser(roles)) {
-            url = "/trang-chu";
+            url = "/admin/home";
         } else if (isAdmin(roles)) {
             url = "/admin/home";
         }
@@ -48,7 +48,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler
     }
 
     private boolean isAdmin(List<String> roles) {
-        if (roles.contains("ADMIN")) {
+        if (roles.contains("MANAGER")) {
             return true;
         }
         return false;

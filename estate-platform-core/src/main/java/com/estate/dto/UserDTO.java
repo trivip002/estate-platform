@@ -1,14 +1,20 @@
 package com.estate.dto;
 
 import java.util.List;
+import java.util.Map;
 
-public class UserDTO extends AbstractDTO<UserDTO>
-{
+public class UserDTO extends AbstractDTO<UserDTO> {
+
+    private static final long serialVersionUID = 9197625705725278793L;
+
     private String userName;
-    private String password;
+    private String passWord;
+    private String email;
+    private String phone;
     private String fullName;
-    private String status;
-    private List<RoleDTO> roles;
+    private String roleCode;
+    private List<RoleDTO> roleList;
+    private Map<String, String> roles;
 
     public String getUserName() {
         return userName;
@@ -16,14 +22,6 @@ public class UserDTO extends AbstractDTO<UserDTO>
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFullName() {
@@ -34,19 +32,54 @@ public class UserDTO extends AbstractDTO<UserDTO>
         this.fullName = fullName;
     }
 
-    public List<RoleDTO> getRoles() {
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+
+    public Map<String, String> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleDTO> roles) {
+    public void setRoles(Map<String, String> roles) {
         this.roles = roles;
     }
 
-    public String getStatus() {
-        return status;
+    public List<RoleDTO> getRoleList() {
+        return roleList;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setRoleList(List<RoleDTO> roleList) {
+        this.roleList = roleList;
     }
+
+
 }

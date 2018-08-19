@@ -15,7 +15,7 @@ public class RoleEntity extends BaseEntity
     @Column
     private  String code;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roleList")
     private List<UserEntity> users;
 
     public String getName() {

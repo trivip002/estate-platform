@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -42,11 +43,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("Username not found");
 		}
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		for (RoleDTO role: userDTO.getRoles()) {
-			authorities.add(new SimpleGrantedAuthority(role.getCode()));
-		}
+        for (RoleDTO role: userDTO.getRoleList()) {
+            authorities.add(new SimpleGrantedAuthority(role.getCode()));
+        }
 
-		MyUserDetail myUserDetail = new MyUserDetail(username, userDTO.getPassword(), true, true, true, true, authorities);
+		MyUserDetail myUserDetail = new MyUserDetail(username, userDTO.getPassWord(), true, true, true, true, authorities);
 		BeanUtils.copyProperties(userDTO, myUserDetail);
 		return myUserDetail;
 	}

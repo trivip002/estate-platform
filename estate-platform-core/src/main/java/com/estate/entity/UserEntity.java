@@ -19,13 +19,20 @@ public class UserEntity extends BaseEntity
     private String fullName;
 
     @Column
+    private  String email;
+
+    @Column
+    private  String phone;
+
+    @Column
     private int status;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = {
             @JoinColumn(name = "user_id", nullable = false) }, inverseJoinColumns = {
             @JoinColumn(name = "role_id", nullable = false) })
-    private List<RoleEntity> roles;
+    private List<RoleEntity> roleList;
 
     public String getUserName() {
         return userName;
@@ -59,13 +66,28 @@ public class UserEntity extends BaseEntity
         this.status = status;
     }
 
-    public List<RoleEntity> getRoles() {
-        return roles;
+    public List<RoleEntity> getRoleList() {
+        return roleList;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
+    public void setRoleList(List<RoleEntity> roleList) {
+        this.roleList = roleList;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
 }

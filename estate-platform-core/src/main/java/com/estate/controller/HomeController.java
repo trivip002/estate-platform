@@ -1,4 +1,4 @@
-package com.estate.controller.web;
+package com.estate.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,14 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@Controller(value = "homeControllerOfWeb")
+@Controller
 public class HomeController
 {
-    @RequestMapping(value = "/trang-chu", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/home", method = RequestMethod.GET)
     public ModelAndView homePage() {
-        ModelAndView mav = new ModelAndView("web/home");
+        ModelAndView mav = new ModelAndView("admin/home");
         return mav;
     }
+
     @RequestMapping(value = "/dang-nhap", method = RequestMethod.GET)
     public ModelAndView loginPage() {
         ModelAndView mav = new ModelAndView("login");
@@ -37,6 +38,6 @@ public class HomeController
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/trang-chu";
+        return "redirect:/dang-nhap";
     }
 }
