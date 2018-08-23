@@ -14,7 +14,9 @@ import com.estate.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.estate.exception.MyException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +39,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private RoleConverter roleConverter;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDTO> getAll() {
@@ -83,11 +88,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO insert(UserDTO userDTO) {
+    public UserDTO insert (UserDTO userDTO)  {
         UserEntity userEntity = userConverter.convertToEntity(userDTO);
         userEntity.setRoleList(roleRepository.findOneByCode(userDTO.getRoleCode()));
         String pass = RandomGenerator.generateRandom(8);
-        userEntity.setPassword(Md5Utils.convertToMd5(pass));
+        //userEntity.setPassword(Md5Utils.convertToMd5(pass));
+        userEntity.setPassword(passwordEncoder.encode(pass));
         userEntity.setStatus(1);
         userEntity = userRepository.save(userEntity);
         return userConverter.convertToDto(userEntity);
@@ -97,7 +103,6 @@ public class UserService implements IUserService {
     public UserDTO update(UserDTO updateUser, long id) {
         UserEntity oldUser = userRepository.findOne(id);
         oldUser.setUserName(updateUser.getUserName());
-        oldUser.setPassword(updateUser.getPassWord());
         oldUser.setFullName(updateUser.getFullName());
         oldUser.setEmail(updateUser.getEmail());
         oldUser.setPhone(updateUser.getPhone());
@@ -125,23 +130,18 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Map<String, String> getMessageResponse(String message) {
-        Map<String, String> results = new HashMap<>();
-        if (message != null) {
-            if (message.equals(SystemConstant.INSERT_SUCCESS)) {
-                results.put(SystemConstant.ALERT, "success");
-                results.put(SystemConstant.MESSAGE_RESPONSE, "Thêm thành công");
-            } else if (message.equals(SystemConstant.UPDATE_SUCCESS)) {
-                results.put(SystemConstant.ALERT, "success");
-                results.put(SystemConstant.MESSAGE_RESPONSE, "Cập nhật thành công");
-            } else if (message.equals(SystemConstant.DELETE_SUCCESS)) {
-                results.put(SystemConstant.ALERT, "success");
-                results.put(SystemConstant.MESSAGE_RESPONSE, "Xóa thành công");
-            } else if (message.equals(SystemConstant.ERROR_SYSTEM)) {
-                results.put(SystemConstant.ALERT, "danger");
-                results.put(SystemConstant.MESSAGE_RESPONSE, "Có lỗi xảy ra!");
-            }
+    public boolean checkUserNameOrEmailExist(String userName, String email,long id) throws MyException {
+        boolean check = false;
+        if(id == 0){ // insert
+             check = userRepository.existsByUserNameOrEmail(userName,email);
+        }else{ // update ko cần kiểm tra usn và email hiện tại của nó
+             check = userRepository.existsByUserNameOrEmailAndIdIsNotIn(userName,email,id);
         }
-        return results;
+        if(check){
+            throw new MyException("Username hoặc email đã tồn tại");
+        }
+
+        return true;
     }
+
 }

@@ -1,6 +1,6 @@
-package com.example.utils;
+package com.estate.utils;
 
-import com.example.constant.SystemConstant;
+import com.estate.constant.SystemConstant;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Map;
 @Component
 public class MessageUtil {
 
-    public Map<String, String> getMessageResponse(String message) {
+    public static Map<String, String> getMessageResponse(String message) {
         Map<String, String> results = new HashMap<>();
         if (message != null) {
             if (message.equals(SystemConstant.INSERT_SUCCESS)) {

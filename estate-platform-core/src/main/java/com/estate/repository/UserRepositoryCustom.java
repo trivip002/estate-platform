@@ -1,4 +1,4 @@
 package com.estate.repository;
 
-public interface CustomizedUserRepository {
+public interface UserRepositoryCustom {
 }

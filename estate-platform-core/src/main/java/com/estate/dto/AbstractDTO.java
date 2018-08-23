@@ -22,6 +22,7 @@ public class AbstractDTO<T> implements Serializable
     private String sortExpression;
     private String sortDirection;
     private int totalPages;
+    private String messageException;
 
     public Long getId() {
         return id;
@@ -106,5 +107,13 @@ public class AbstractDTO<T> implements Serializable
     }
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public String getMessageException() {
+        return messageException;
+    }
+
+    public void setMessageException(String messageException) {
+        this.messageException = messageException;
     }
 }

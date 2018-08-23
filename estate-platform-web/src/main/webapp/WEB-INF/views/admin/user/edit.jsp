@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp"%>
 <c:url var="formUrl" value="/api/admin/user"/>
+<c:url var="formUrl2" value="/api/admin/checkexist"/>
 <html>
 <head>
     <title>Chỉnh sửa người dùng</title>
@@ -92,9 +93,11 @@
     </div>
 </div>
 <script>
-    var check;
+    var check_valdidate;
+    var check_exist;
     $(document).ready(function () {
-        check = false;
+        check_valdidate = false;
+        check_exist =true;
         $("#formEdit").validate({
 
             rules: {
@@ -145,12 +148,33 @@
             },
             submitHandler: function(form)
             {
-                check = true;
-                form.submit();
+                check_valdidate = true;
             }
 
         });
     });
+
+    $('#userName').blur(function (event) {
+       bindDataAndCheckExist();
+    })
+
+    $('#email').blur(function (event) {
+        bindDataAndCheckExist();
+    })
+
+    function bindDataAndCheckExist(){
+        var dataArray = {};
+        dataArray["userName"] = $('#userName').val();
+        dataArray["email"] = $('#email').val();
+        var id = $('#userId').val();
+        if(id == ""){
+            id = 0;
+        }
+        dataArray["id"] = id;
+        if(email != "" && userName != ""){
+            checkUserNameOrEmailExist(dataArray);
+        }
+    }
 
     $('#btnAddOrUpdateUsers').click(function (event) {
         event.preventDefault();
@@ -162,15 +186,38 @@
         dataArray["phone"] = $('#phone').val();
         var id = $('#userId').val();
         $('#formEdit').submit();
-        if(check){
+        if(check_valdidate && check_exist){
             if (id == "") {
                 addUser(dataArray);
-            } else {
+            } else{
                 updateUser(dataArray, id);
             }
         }
 
     });
+
+    function checkUserNameOrEmailExist(data) {
+        $.ajax({
+            url: '${formUrl2}',
+            type: 'POST',
+            dataType: 'json',
+            contentType:'application/json',
+            data: JSON.stringify(data),
+            success: function(res) {
+                <%--window.location.href = "<c:url value='/admin/user/edit?"+res.id+"?message="+res.message+"'/>";--%>
+                check_exist = true; // ko trùng
+                var message = res.messageException;
+                if(message != null){
+                    check_exist = false; //bị trùng
+                    alert(message);
+                }
+            },
+            error: function(res) {
+                console.log(res);
+                <%--window.location.href = "<c:url value='/admin/user/edit?"+res.id+"?message="+res.message+"'/>";--%>
+            }
+        });
+    }
 
 
 
@@ -199,11 +246,11 @@
             contentType:'application/json',
             data: JSON.stringify(data),
             success: function(res) {
-                window.location.href = "<c:url value='/admin/user/"+res.id+"?message=update_success'/>";
+                window.location.href = "<c:url value='/admin/user/list?message=update_success'/>";
             },
             error: function(res) {
                 console.log(res);
-                window.location.href = "<c:url value='/admin/user/"+res.id+"?message=error_system'/>";
+                window.location.href = "<c:url value='/admin/user/list?message=error_system'/>";
             }
         });
     }

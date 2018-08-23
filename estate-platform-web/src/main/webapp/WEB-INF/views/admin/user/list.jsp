@@ -113,7 +113,7 @@
                                         <display:column headerClass="text-left" property="phone" title="Điện thoại"/>
                                         <display:column headerClass="col-actions" title="Thao tác">
                                             <a class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip"
-                                               title="Cập nhật người dùng" href='<c:url value="/admin/user/${tableList.id}"/>'><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                               title="Cập nhật người dùng" href='<c:url value="/admin/user/edit?id=${tableList.id}"/>'><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                                         </display:column>
                                     </display:table>
                                 </div>

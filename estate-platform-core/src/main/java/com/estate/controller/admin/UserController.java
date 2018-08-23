@@ -5,15 +5,13 @@ import com.estate.dto.UserDTO;
 import com.estate.service.IRoleService;
 import com.estate.service.IUserService;
 import com.estate.utils.DisplayTagUtils;
+import com.estate.utils.MessageUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,27 +41,26 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin/user/edit", method = RequestMethod.GET)
-    public ModelAndView editUsersPage() {
-        ModelAndView mav = new ModelAndView("admin/user/edit");
-        UserDTO users = new UserDTO();
-        users.setRoles(roleService.getRoles());
-        mav.addObject(SystemConstant.MODEL, users);
-        return mav;
-    }
 
-    @RequestMapping(value = "/admin/user/{id}", method = RequestMethod.GET)
-    public ModelAndView getUserById(@PathVariable("id") long id, HttpServletRequest request) {
+    @RequestMapping(value = "/admin/user/edit", method = RequestMethod.GET)
+    public ModelAndView getUserById(@RequestParam(value="id", required=false) String id, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/user/edit");
-        initMessageResponse(mav, request);
-        mav.addObject(SystemConstant.MODEL, userService.findUserById(id));
+        if(id != null){
+            initMessageResponse(mav, request);
+            mav.addObject(SystemConstant.MODEL, userService.findUserById(Long.valueOf(id)));
+        }
+        else{
+            UserDTO users = new UserDTO();
+            users.setRoles(roleService.getRoles());
+            mav.addObject(SystemConstant.MODEL, users);
+        }
         return mav;
     }
 
     private void initMessageResponse(ModelAndView mav, HttpServletRequest request) {
         String message = request.getParameter("message");
         if (message != null && StringUtils.isNotEmpty(message)) {
-            Map<String, String> messageMap = userService.getMessageResponse(message);
+            Map<String, String> messageMap = MessageUtil.getMessageResponse(message);
             mav.addObject(SystemConstant.ALERT, messageMap.get(SystemConstant.ALERT));
             mav.addObject(SystemConstant.MESSAGE_RESPONSE, messageMap.get(SystemConstant.MESSAGE_RESPONSE));
         }

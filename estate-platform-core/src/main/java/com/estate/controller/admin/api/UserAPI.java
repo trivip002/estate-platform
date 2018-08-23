@@ -1,7 +1,7 @@
 package com.estate.controller.admin.api;
 
 import com.estate.dto.UserDTO;
-import com.estate.repository.UserRepository;
+import com.estate.exception.MyException;
 import com.estate.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +14,16 @@ public class UserAPI{
         @Autowired
         private IUserService userService;
 
-        @Autowired
-        private UserRepository userRepository;
-
         @PostMapping
         public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-            return ResponseEntity.ok(userService.insert(userDTO));
+                return ResponseEntity.ok(userService.insert(userDTO));
+
         }
 
         @PutMapping("/{id}")
         public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, @PathVariable("id") long id) {
-            return ResponseEntity.ok(userService.update(userDTO, id));
+                return ResponseEntity.ok(userService.update(userDTO, id));
+
         }
 
         @DeleteMapping
