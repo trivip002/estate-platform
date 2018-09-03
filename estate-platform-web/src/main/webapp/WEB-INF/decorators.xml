@@ -6,6 +6,7 @@
         <pattern>/api*</pattern>
         <pattern>/access-denied</pattern>
         <pattern>/ckfinder*</pattern>
+        <pattern>/admin/building/detail*</pattern>
     </excludes>
 
     <!-- apply Sitemesh default template -->

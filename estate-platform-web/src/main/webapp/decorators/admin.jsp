@@ -25,15 +25,6 @@
         <%--datatable css--%>
         <link href="<c:url value="/template/admin/data-table/media/css/dataTables.bootstrap4_v4.6.1.min.css"/>" rel="stylesheet">
 
-
-        
-        <%--&lt;%&ndash;ckeditor plugin&ndash;%&gt;
-    	<script type="text/javascript" src="<c:url value="/ckeditor/ckeditor.js"/>"></script>    
-    	
-    	&lt;%&ndash;ckfinder&ndash;%&gt;
-    	<script type="text/javascript" src="<c:url value="/ckfinder/ckfinder.js"/>"></script>--%>
-
-		<%--common javascript file--%>
 		<script type="text/javascript" src="<c:url value="/template/js/global_admin_script.js"/>"></script>
 </head>
 <body class="no-skin"> 

@@ -15,6 +15,7 @@ public class UserDTO extends AbstractDTO<UserDTO> {
     private String roleCode;
     private List<RoleDTO> roleList;
     private Map<String, String> roles;
+    private List<BuildingDTO> buildings;
 
     public String getUserName() {
         return userName;
@@ -79,6 +80,14 @@ public class UserDTO extends AbstractDTO<UserDTO> {
 
     public void setRoleList(List<RoleDTO> roleList) {
         this.roleList = roleList;
+    }
+
+    public List<BuildingDTO> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<BuildingDTO> buildings) {
+        this.buildings = buildings;
     }
 
 

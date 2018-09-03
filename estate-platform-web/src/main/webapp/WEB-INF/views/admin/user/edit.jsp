@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp"%>
 <c:url var="formUrl" value="/api/admin/user"/>
-<c:url var="formUrl2" value="/api/admin/checkexist"/>
 <html>
 <head>
     <title>Chỉnh sửa người dùng</title>
@@ -154,9 +153,9 @@
         });
     });
 
-    $('#userName').blur(function (event) {
-       bindDataAndCheckExist();
-    })
+    // $('#userName').blur(function (event) {
+    //    bindDataAndCheckExist();
+    // })
 
     $('#email').blur(function (event) {
         bindDataAndCheckExist();
@@ -198,13 +197,12 @@
 
     function checkUserNameOrEmailExist(data) {
         $.ajax({
-            url: '${formUrl2}',
-            type: 'POST',
+            url: '${formUrl}/usages',
+            type: 'GET',
             dataType: 'json',
             contentType:'application/json',
             data: JSON.stringify(data),
             success: function(res) {
-                <%--window.location.href = "<c:url value='/admin/user/edit?"+res.id+"?message="+res.message+"'/>";--%>
                 check_exist = true; // ko trùng
                 var message = res.messageException;
                 if(message != null){
@@ -214,7 +212,6 @@
             },
             error: function(res) {
                 console.log(res);
-                <%--window.location.href = "<c:url value='/admin/user/edit?"+res.id+"?message="+res.message+"'/>";--%>
             }
         });
     }

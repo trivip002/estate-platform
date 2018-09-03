@@ -15,5 +15,6 @@ public interface IUserService {
 	UserDTO update(UserDTO updateUser, long id);
 	UserDTO findUserById(long id);
 	void deleteUser(long[] ids);
-	boolean checkUserNameOrEmailExist(String userName,String email,long id) throws MyException;
+	void checkUserNameOrEmailExist(String userName,String email,Long id) throws MyException;
+	Map<String, String> getUsers();
 }

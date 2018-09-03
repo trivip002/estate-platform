@@ -19,4 +19,5 @@
     </bean>
 
     <mvc:resources mapping="/template/**" location="/template/" />
+    <mvc:resources mapping="/image/**" location="/image/" />
 </beans>

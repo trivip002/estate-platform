@@ -36,18 +36,46 @@
         </div>
     </div>
     <ul class="nav nav-list">
+            <security:authorize access="hasRole('MANAGER')">
+                <li class="">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text">Quản lý user</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href='<c:url value="/admin/user/list"/>'>
+                                <i class="menu-icon fa fa-caret-right"></i>
+                                Danh sách user
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+            </security:authorize>
+
+
         <li class="">
             <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-list"></i>
-                <span class="menu-text">Quản lý user</span>
+                <span class="menu-text">Quản lý tòa nhà</span>
                 <b class="arrow fa fa-angle-down"></b>
             </a>
             <b class="arrow"></b>
             <ul class="submenu">
                 <li class="">
-                    <a href='<c:url value="/admin/user/list"/>'>
+                    <a href='<c:url value="/admin/building/list"/>'>
                         <i class="menu-icon fa fa-caret-right"></i>
-                        Danh sách user
+                        Danh sách tòa nhà
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a href='<c:url value="/admin/building/list?prioritize=1"/>'>
+                        <i class="menu-icon fa fa-caret-right"></i>
+                        Danh sách tòa nhà ưu tiên
                     </a>
                     <b class="arrow"></b>
                 </li>

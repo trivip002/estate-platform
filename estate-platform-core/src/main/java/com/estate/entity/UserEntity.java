@@ -34,6 +34,12 @@ public class UserEntity extends BaseEntity
             @JoinColumn(name = "role_id", nullable = false) })
     private List<RoleEntity> roleList;
 
+
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "staffs")
+    private List<BuildingEntity> buildings;
+
+
     public String getUserName() {
         return userName;
     }
@@ -89,5 +95,14 @@ public class UserEntity extends BaseEntity
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public List<BuildingEntity> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<BuildingEntity> buildings) {
+        this.buildings = buildings;
+    }
+
 
 }

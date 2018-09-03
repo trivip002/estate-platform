@@ -26,7 +26,7 @@ import java.util.Map;
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private UserRepository userRepository ;
+    private UserRepository userRepository;
 
     @Autowired
     private UserConverter userConverter;
@@ -47,7 +47,7 @@ public class UserService implements IUserService {
     public List<UserDTO> getAll() {
         List<UserDTO> userDTOS = new ArrayList<>();
         List<UserEntity> userEntities = userRepository.findAll();
-        for (UserEntity item: userEntities) {
+        for (UserEntity item : userEntities) {
             UserDTO userDTO = userConverter.convertToDto(item);
             userDTOS.add(userDTO);
         }
@@ -64,7 +64,7 @@ public class UserService implements IUserService {
             usersPage = userRepository.findAll(pageable);
         }
         for (UserEntity item : usersPage.getContent()) {
-            if(item.getStatus() != 0){
+            if (item.getStatus() != 0) {
                 UserDTO userDTO = userConverter.convertToDto(item);
                 result.add(userDTO);
             }
@@ -75,20 +75,20 @@ public class UserService implements IUserService {
     @Override
     public int getTotalItems(String searchValue) {
         int totalItem = 0;
-        int totalItemDelete = (int)userRepository.countByStatus(0);
+        int totalItemDelete = (int) userRepository.countByStatus(0);
         if (searchValue != null) {
-            totalItem = (int) userRepository.countByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue,searchValue,searchValue,searchValue) - totalItemDelete;
+            totalItem = (int) userRepository.countByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue) - totalItemDelete;
         } else {
             totalItem = (int) userRepository.count() - totalItemDelete;
         }
-        if(totalItem < 0){
+        if (totalItem < 0) {
             return 0;
         }
         return totalItem;
     }
 
     @Override
-    public UserDTO insert (UserDTO userDTO)  {
+    public UserDTO insert(UserDTO userDTO) {
         UserEntity userEntity = userConverter.convertToEntity(userDTO);
         userEntity.setRoleList(roleRepository.findOneByCode(userDTO.getRoleCode()));
         String pass = RandomGenerator.generateRandom(8);
@@ -130,18 +130,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean checkUserNameOrEmailExist(String userName, String email,long id) throws MyException {
-        boolean check = false;
-        if(id == 0){ // insert
-             check = userRepository.existsByUserNameOrEmail(userName,email);
-        }else{ // update ko cần kiểm tra usn và email hiện tại của nó
-             check = userRepository.existsByUserNameOrEmailAndIdIsNotIn(userName,email,id);
-        }
-        if(check){
+    public void checkUserNameOrEmailExist(String userName, String email, Long id) throws MyException {
+        if (id == 0 && userRepository.existsByUserNameOrEmail(userName, email)) {
             throw new MyException("Username hoặc email đã tồn tại");
+        } else {
+            //custom method check using JPA
         }
+    }
 
-        return true;
+    @Override
+    public Map<String, String> getUsers() {
+        Map<String, String> users = new HashMap<>();
+        List<UserEntity> entities = userRepository.findAll();
+        entities.forEach(item -> {
+            users.put(item.getId().toString(), item.getUserName());
+        });
+        return users;
     }
 
 }

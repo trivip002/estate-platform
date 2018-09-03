@@ -33,4 +33,17 @@ public class UserAPI{
             }
             return ResponseEntity.ok("success");
         }
+
+        @GetMapping("/usages")
+        public ResponseEntity<UserDTO> checkExist(@RequestBody UserDTO userDTO) {
+            try {
+                userService.checkUserNameOrEmailExist(userDTO.getUserName(),userDTO.getEmail(),userDTO.getId());
+            } catch (MyException e) {
+                userDTO.setMessageException(e.getMessage());
+                e.printStackTrace();
+            }
+            return ResponseEntity.ok(userDTO);
+        }
+
+
 }
