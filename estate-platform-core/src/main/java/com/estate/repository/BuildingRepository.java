@@ -14,6 +14,8 @@ public interface BuildingRepository extends JpaRepository<BuildingEntity, Long> 
     Page<BuildingEntity> findByStaffs_id(Pageable pageable,long userId);
     //lấy tòa nhà ưu tiên theo user
     Page<BuildingEntity> findByStaffsPrioritize_id(Pageable pageable,long userId);
+    //lấy tòa nhà ưu tiên theo user
+    List<BuildingEntity> findByStaffsPrioritize_id(long userId);
 
 }
 

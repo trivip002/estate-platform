@@ -1,5 +1,7 @@
 package com.estate.entity;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +66,16 @@ public class BuildingEntity extends BaseEntity {
     @Column
     private String avatar;
 
+    @Column
+    private int prioritize;
+
+    public int getPrioritize() {
+        return prioritize;
+    }
+
+    public void setPrioritize(int prioritize) {
+        this.prioritize = prioritize;
+    }
 
     @ManyToOne
     @JoinColumn(name = "district_id", nullable = false)

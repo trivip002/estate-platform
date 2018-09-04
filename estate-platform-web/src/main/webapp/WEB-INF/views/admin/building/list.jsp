@@ -118,17 +118,16 @@
                                         <c:if test="${prioritize != 1}">
                                             <display:column headerClass="" title="HOT">
                                                 <a href="#" id="${tableList.id}" class="btnPlus">
-                                                    <%--<c:set var = "index" scope = "session" value = "${tableList_rowNum-1}"/>--%>
-                                                    <%--<c:set var = "listBuildingPrioritize" scope = "session" value = "${model.listBuildingPrioritize}"/>--%>
-                                                    <%--<c:choose>--%>
-                                                        <%--<c:when test="${listBuildingPrioritize.contains(model.listResult.get(index))}">--%>
-                                                            <%--<span id="btn_${tableList.id}" class="glyphicon glyphicon-ok"></span>--%>
-                                                        <%--</c:when>--%>
-                                                        <%--<c:otherwise>--%>
-                                                            <%--<span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>--%>
-                                                        <%--</c:otherwise>--%>
-                                                    <%--</c:choose>--%>
-                                                    <span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>
+                                                    <c:set var = "index" scope = "session" value = "${tableList_rowNum-1}"/>
+                                                    <c:choose>
+                                                        <c:when test="${model.listResult.get(index).prioritize == 1}">
+                                                            <span id="btn_${tableList.id}" class="glyphicon glyphicon-ok"></span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <%--<span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>--%>
                                                 </a>
                                             </display:column>
                                         </c:if>

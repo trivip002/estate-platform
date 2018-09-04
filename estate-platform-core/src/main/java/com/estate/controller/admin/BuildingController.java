@@ -60,8 +60,6 @@ public class BuildingController {
             buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,0,userId,isManager);
         }
         model.setListResult(buildings);
-        // lấy list building ưu tiên
-        //model.setListBuildingPrioritize(buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1,userId,isManager));
         model.setTotalItems(buildingService.getTotalItems(model.getSearchValue()));
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);

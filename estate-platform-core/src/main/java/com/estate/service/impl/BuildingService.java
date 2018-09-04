@@ -78,10 +78,17 @@ public class BuildingService implements IBuildingService {
             }
             for (BuildingEntity item : buildingsPage.getContent()) {
                 BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
+                if(prioritize != 1){ // ko lấy danh sách ưu tiên, giữ trạng thái ưu tiên cho building
+                    List<BuildingEntity> buildingPrioritizes = buildingRepository.findByStaffsPrioritize_id(userId);
+                    for (BuildingEntity priority : buildingPrioritizes){
+                        if(item.getId() == priority.getId()){
+                            buildingDTO.setPrioritize(1);
+                        }
+                    }
+                }
                 buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard());
                 result.add(buildingDTO);
             }
-
         return result;
     }
 
@@ -106,24 +113,16 @@ public class BuildingService implements IBuildingService {
         }
     }
 
-    void setTypeArray(BuildingDTO buildingDTO){
-        String [] typeArray = buildingDTO.getTypeArrays();
-        String temp = "";
-        for (String s : typeArray) {
-            temp += (s + ",");
-        }
-        buildingDTO.setTypes(temp);
-    }
+
 
     @Override
     @Transactional
     public BuildingDTO insert(BuildingDTO buildingDTO) {
         saveImage(buildingDTO);
+        buildingDTO.setPrioritize(0);
         BuildingEntity buildingEntity = buildingConverter.convertToEntity(buildingDTO);
         buildingEntity.setDistrict(districtRepository.findOneByCode(buildingDTO.getDistrictCode()));
-        setTypeArray(buildingDTO);
-        //cắt dấu phẩy ở cuối
-        buildingEntity.setTypes(buildingDTO.getTypes().substring(0,buildingDTO.getTypes().length()-1));
+        buildingEntity.setTypes(StringUtils.join(buildingDTO.getTypeArrays(), ","));
         buildingEntity = buildingRepository.save(buildingEntity);
         return buildingConverter.convertToDto(buildingEntity);
     }
@@ -159,8 +158,7 @@ public class BuildingService implements IBuildingService {
         oldBuilding.setPayment(updateBuilding.getPayment());
         oldBuilding.setRentArea(updateBuilding.getRentArea());
         oldBuilding.setPrice(updateBuilding.getPrice());
-        setTypeArray(updateBuilding);
-        oldBuilding.setTypes(updateBuilding.getTypes().substring(0,updateBuilding.getTypes().length()-1));
+        oldBuilding.setTypes(StringUtils.join(updateBuilding.getTypeArrays(), ","));
         if (StringUtils.isNotEmpty(updateBuilding.getImageName())) { // co thay doi hinh
             saveImage(updateBuilding);
             oldBuilding.setAvatar(updateBuilding.getAvatar());
@@ -196,7 +194,7 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
-    public BuildingDTO updateStaffBuildingPrioritize(long userId, long id,boolean update) {
+    public BuildingDTO updatePrioritize(long userId, long id,boolean update) {
         BuildingEntity entity = buildingRepository.findOne(id);
         UserEntity userEntity = userRepository.findOne(userId);
         List<UserEntity> userEntitiesPrioritize = entity.getStaffsPrioritize();

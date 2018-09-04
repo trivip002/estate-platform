@@ -41,7 +41,7 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String avatarBase64;
     private List<UserDTO> users;
     private String user;
-
+    private int prioritize;
 
     public String getUser() {
         return user;
@@ -324,7 +324,13 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     }
 
 
+    public int getPrioritize() {
+        return prioritize;
+    }
 
+    public void setPrioritize(int prioritize) {
+        this.prioritize = prioritize;
+    }
 
 
 }
