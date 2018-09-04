@@ -55,17 +55,26 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
-    public List<BuildingDTO> getBuildingsByPrioritize(String searchValue, Pageable pageable,int prioritize) {
+    public List<BuildingDTO> getBuildingsByPrioritizeAndUser(String searchValue, Pageable pageable,int prioritize,Long userId,boolean isManager) {
         List<BuildingDTO> result = new ArrayList<>();
         Page<BuildingEntity> buildingsPage = null;
             if (searchValue != null) {
                 //usersPage = userRepository.findByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue, pageable);
             } else {
-                if(prioritize == 1){
-                    buildingsPage = buildingRepository.findByPrioritize(pageable,prioritize);
-                }else {
-                    buildingsPage = buildingRepository.findAll(pageable);
+                if(isManager){ // manager
+                    if(prioritize == 1){
+                        buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
+                    }else {
+                        buildingsPage = buildingRepository.findAll(pageable);
+                    }
+                }else {// user
+                    if(prioritize == 1){
+                        buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
+                    }else {
+                        buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
+                    }
                 }
+
             }
             for (BuildingEntity item : buildingsPage.getContent()) {
                 BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
@@ -76,24 +85,6 @@ public class BuildingService implements IBuildingService {
         return result;
     }
 
-//    @Override
-//    public List<BuildingDTO> getBuildingsByUser(String searchValue, Pageable pageable, long userId) {
-//        List<BuildingDTO> result = new ArrayList<>();
-//        Page<BuildingEntity> buildingsPage = null;
-//        if (searchValue != null) {
-//            //usersPage = userRepository.findByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue, pageable);
-//        } else {
-//
-//                buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
-//        }
-//        for (BuildingEntity item : buildingsPage.getContent()) {
-//            BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-//            buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard());
-//            result.add(buildingDTO);
-//        }
-//
-//        return result;
-//    }
 
     @Override
     public int getTotalItems(String searchValue) {
@@ -113,6 +104,15 @@ public class BuildingService implements IBuildingService {
             fileUtils.writeOrUpdate(path,decodeBase64);
             buildingDTO.setAvatar(dirDefault + File.separator + path);
         }
+    }
+
+    void setTypeArray(BuildingDTO buildingDTO){
+        String [] typeArray = buildingDTO.getTypeArrays();
+        String temp = "";
+        for (String s : typeArray) {
+            temp += (s + ",");
+        }
+        buildingDTO.setTypes(temp);
     }
 
     @Override
@@ -135,7 +135,6 @@ public class BuildingService implements IBuildingService {
         oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
         oldBuilding.setCarParkingCharge(updateBuilding.getCarParkingCharge());
         oldBuilding.setDistrict(districtRepository.findOneByCode(updateBuilding.getDistrictCode()));
-        oldBuilding.setPrioritize(updateBuilding.getPrioritize());
         oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
         oldBuilding.setDeposit(updateBuilding.getDeposit());
         oldBuilding.setDescription(updateBuilding.getDescription());
@@ -197,6 +196,30 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
+    public BuildingDTO updateStaffBuildingPrioritize(long userId, long id,boolean update) {
+        BuildingEntity entity = buildingRepository.findOne(id);
+        UserEntity userEntity = userRepository.findOne(userId);
+        List<UserEntity> userEntitiesPrioritize = entity.getStaffsPrioritize();
+        if(update){
+            userEntitiesPrioritize.add(userEntity);
+        }else { // delete
+            int index = 0;
+            for (UserEntity item: userEntitiesPrioritize) {
+                    if(item.getUserName().equals(userEntity.getUserName())){
+                    userEntitiesPrioritize.remove(index);
+                    break;
+                }
+                index++;
+            }
+        }
+        entity.setStaffsPrioritize(userEntitiesPrioritize);
+        buildingRepository.save(entity);
+        return buildingConverter.convertToDto(entity);
+    }
+
+
+
+    @Override
     public BuildingDTO findBuildingById(long id) {
         BuildingEntity entity = buildingRepository.findOne(id);
         BuildingDTO dto = buildingConverter.convertToDto(entity);
@@ -212,13 +235,6 @@ public class BuildingService implements IBuildingService {
         }
     }
 
-    void setTypeArray(BuildingDTO buildingDTO){
-        String [] typeArray = buildingDTO.getTypeArrays();
-        String temp = "";
-        for (String s : typeArray) {
-            temp += (s + ",");
-        }
-        buildingDTO.setTypes(temp);
-    }
+
 
 }

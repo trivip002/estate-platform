@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/admin/building")
@@ -40,6 +39,18 @@ public class BuildingAPI {
     @PutMapping("/user/{id}")
     public ResponseEntity<BuildingDTO> updateBuildingStaffs(@RequestBody String users, @PathVariable("id") long id) {
         return ResponseEntity.ok(buildingService.insertStaffBuilding(users, id));
+
+    }
+
+    @PutMapping("/prioritize/{id}")
+    public ResponseEntity<BuildingDTO> updateBuildingStaffsPrioritize(@RequestBody long userId, @PathVariable("id") long id) {
+        return ResponseEntity.ok(buildingService.updateStaffBuildingPrioritize(userId, id,true));
+
+    }
+
+    @PutMapping("/delete/prioritize/{id}")
+    public ResponseEntity<BuildingDTO> deleteBuildingStaffsPrioritize(@RequestBody long userId, @PathVariable("id") long id) {
+        return ResponseEntity.ok(buildingService.updateStaffBuildingPrioritize(userId, id,false));
 
     }
 }

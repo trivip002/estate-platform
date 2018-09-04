@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBuildingService  {
-    List<BuildingDTO> getBuildingsByPrioritize(String searchValue, Pageable pageable,int prioritize);
+    List<BuildingDTO> getBuildingsByPrioritizeAndUser(String searchValue, Pageable pageable,int prioritize,Long userId,boolean isManager);
     int getTotalItems(String searchValue);
     BuildingDTO insert(BuildingDTO buildingDTO);
     BuildingDTO update(BuildingDTO updateBuilding, long id);
@@ -15,5 +15,6 @@ public interface IBuildingService  {
     void deleteBuilding(long[] ids);
     Map<String,String> getBuildingTypes();
     BuildingDTO insertStaffBuilding(String users,long id);
+    BuildingDTO updateStaffBuildingPrioritize(long userId,long id,boolean update);
 
 }

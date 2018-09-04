@@ -8,10 +8,13 @@ import com.estate.service.IDistrictService;
 import com.estate.service.IUserService;
 import com.estate.utils.DisplayTagUtils;
 import com.estate.utils.MessageUtil;
+import com.estate.utils.SecurityUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,15 +47,21 @@ public class BuildingController {
         DisplayTagUtils.initSearchBean(request, model);
         model.setMaxPageItems(10);
         Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
+        Long userId = SecurityUtils.getPrincipal().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isManager = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("MANAGER"));
         List<BuildingDTO> buildings;
         if(prioritize != null){
-            model.setPrioritize(1);
-            buildings = buildingService.getBuildingsByPrioritize(model.getSearchValue(), pageable,1);
+            mav.addObject("prioritize",1);
+            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1,userId,isManager);
         }
         else {
-            buildings = buildingService.getBuildingsByPrioritize(model.getSearchValue(), pageable,0);
+            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,0,userId,isManager);
         }
         model.setListResult(buildings);
+        // lấy list building ưu tiên
+        //model.setListBuildingPrioritize(buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1,userId,isManager));
         model.setTotalItems(buildingService.getTotalItems(model.getSearchValue()));
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);

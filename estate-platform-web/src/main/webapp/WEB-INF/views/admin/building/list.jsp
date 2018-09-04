@@ -115,16 +115,20 @@
                                         <display:column headerClass="text-left" property="name" title="Diện tích trống"/>
                                         <display:column headerClass="text-left" property="price" title="Giá thuê"/>
                                         <display:column headerClass="text-left" property="agencyCharge" title="Phí môi giới"/>
-                                        <c:if test="${model.prioritize != 1}">
+                                        <c:if test="${prioritize != 1}">
                                             <display:column headerClass="" title="HOT">
                                                 <a href="#" id="${tableList.id}" class="btnPlus">
-                                                    <c:set var = "index" scope = "session" value = "${tableList_rowNum-1}"/>
-                                                    <c:if test="${model.listResult.get(index).prioritize == 1}">
-                                                        <span id="btn_${tableList.id}" class="glyphicon glyphicon-ok"></span>
-                                                    </c:if>
-                                                    <c:if test="${model.listResult.get(index).prioritize == 0}">
-                                                        <span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>
-                                                    </c:if>
+                                                    <%--<c:set var = "index" scope = "session" value = "${tableList_rowNum-1}"/>--%>
+                                                    <%--<c:set var = "listBuildingPrioritize" scope = "session" value = "${model.listBuildingPrioritize}"/>--%>
+                                                    <%--<c:choose>--%>
+                                                        <%--<c:when test="${listBuildingPrioritize.contains(model.listResult.get(index))}">--%>
+                                                            <%--<span id="btn_${tableList.id}" class="glyphicon glyphicon-ok"></span>--%>
+                                                        <%--</c:when>--%>
+                                                        <%--<c:otherwise>--%>
+                                                            <%--<span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>--%>
+                                                        <%--</c:otherwise>--%>
+                                                    <%--</c:choose>--%>
+                                                    <span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>
                                                 </a>
                                             </display:column>
                                         </c:if>
@@ -145,7 +149,7 @@
             </div>
         </div>
     </form:form>
-
+    <input type="hidden" value="<%=SecurityUtils.getPrincipal().getId()%>" id="userId">
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -175,7 +179,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    var userArray = "";
+    var users = "";
     $(document).ready(function () {
 
     });
@@ -187,36 +191,33 @@
 
     $('.btnPlus').click(function (event) {
         event.preventDefault();
-        var dataArray = {};
         id = $(this).attr("id");
-        userId = 2;
-        var prioritize;
+        userId = $('#userId').val();
         if($('#btn_'+id).hasClass("glyphicon glyphicon-plus")){
-            prioritize = 1;
             $('#btn_'+id).removeClass("glyphicon glyphicon-plus");
             $('#btn_'+id).addClass("glyphicon glyphicon-ok");
+            updatePrioritize(userId,id);
         }else{
-            prioritize = 0;
             $('#btn_'+id).removeClass("glyphicon glyphicon-ok");
             $('#btn_'+id).addClass("glyphicon glyphicon-plus");
+            deletePrioritize(userId,id);
         }
-        dataArray["user_id"] = userId
-        dataArray["buiding_id"] = id;
 
-        updatePrioritize(dataArray,prioritize);
+
+
 
     });
 
     $('#btnAdd').click(function (event) {
         event.preventDefault();
-        userArray += ($('#userName').val()+",");
+        users += ($('#userName').val()+",");
 
     });
 
     $('#btnSave').click(function (event) {
         event.preventDefault();
         //var id = $('#tableList.id')
-        updateBuilding(userArray, 3);
+        updateBuilding(users, 3);
     });
 
     function updateBuilding(data, id) {
@@ -225,7 +226,7 @@
             type: 'PUT',
             dataType: 'json',
             contentType:'application/json',
-            data: JSON.stringify(data,id),
+            data: JSON.stringify(data),
             success: function(res) {
                 window.location.href = "<c:url value='/admin/building/list?message=update_success'/>";
             },
@@ -236,26 +237,32 @@
         });
     }
 
-
-    function warningBeforeDelete() {
-        showAlertBeforeDelete(function () {
-            event.preventDefault();
-            var dataArray = $(' tbody input[type=checkbox]:checked').map(function () {
-                return $(this).val();
-            }).get();
-            deleteBuilding(dataArray);
+    function updatePrioritize(userId,id) {
+        $.ajax({
+            url: '${API}/prioritize/'+id,
+            type: 'PUT',
+            dataType: 'json',
+            contentType:'application/json',
+            data: JSON.stringify(userId),
+            success: function(res) {
+                window.location.href = "<c:url value='/admin/building/list?message=update_success'/>";
+            },
+            error: function(res) {
+                console.log(res);
+                window.location.href = "<c:url value='/admin/building/list?message=error_system'/>";
+            }
         });
     }
 
-    function updatePrioritize(data,proritize) {
+    function deletePrioritize(data,id) {
         $.ajax({
-            url: '${API}/prioritize/'+proritize,
+            url: '${API}/delete/prioritize/'+id,
             type: 'PUT',
             dataType: 'json',
             contentType:'application/json',
             data: JSON.stringify(data),
             success: function(res) {
-                <%--window.location.href = "<c:url value='/admin/building/list'/>";--%>
+                window.location.href = "<c:url value='/admin/building/list?message=update_success'/>";
             },
             error: function(res) {
                 console.log(res);
@@ -277,6 +284,16 @@
                 console.log(res);
                 window.location.href = "<c:url value='/admin/building/list?message=error_system'/>";
             }
+        });
+    }
+
+    function warningBeforeDelete() {
+        showAlertBeforeDelete(function () {
+            event.preventDefault();
+            var dataArray = $(' tbody input[type=checkbox]:checked').map(function () {
+                return $(this).val();
+            }).get();
+            deleteBuilding(dataArray);
         });
     }
 </script>

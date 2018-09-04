@@ -39,9 +39,9 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String avatar;
     private String imageName;
     private String avatarBase64;
-    private int prioritize;
     private List<UserDTO> users;
     private String user;
+
 
     public String getUser() {
         return user;
@@ -293,14 +293,6 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public int getPrioritize() {
-        return prioritize;
-    }
-
-    public void setPrioritize(int prioritize) {
-        this.prioritize = prioritize;
     }
 
     public List<UserDTO> getUsers() {

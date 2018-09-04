@@ -63,8 +63,7 @@ public class BuildingEntity extends BaseEntity {
     private String map;
     @Column
     private String avatar;
-    @Column
-    private int prioritize;
+
 
     @ManyToOne
     @JoinColumn(name = "district_id", nullable = false)
@@ -76,6 +75,20 @@ public class BuildingEntity extends BaseEntity {
             @JoinColumn(name = "builiding_id", nullable = false) }, inverseJoinColumns = {
             @JoinColumn(name = "staff_id", nullable = false) })
     private List<UserEntity> staffs = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "proritize_building", joinColumns = {
+            @JoinColumn(name = "builiding_id", nullable = false) }, inverseJoinColumns = {
+            @JoinColumn(name = "staff_id", nullable = false) })
+    private List<UserEntity> staffsPrioritize = new ArrayList<>();
+
+    public List<UserEntity> getStaffsPrioritize() {
+        return staffsPrioritize;
+    }
+
+    public void setStaffsPrioritize(List<UserEntity> staffsPrioritize) {
+        this.staffsPrioritize = staffsPrioritize;
+    }
 
     public String getName() {
         return name;
@@ -277,14 +290,6 @@ public class BuildingEntity extends BaseEntity {
         this.avatar = avatar;
     }
 
-    public int getPrioritize() {
-        return prioritize;
-    }
-
-    public void setPrioritize(int prioritize) {
-        this.prioritize = prioritize;
-    }
-
     public DistrictEntity getDistrict() {
         return district;
     }
@@ -292,7 +297,6 @@ public class BuildingEntity extends BaseEntity {
     public void setDistrict(DistrictEntity district) {
         this.district = district;
     }
-
 
     public List<UserEntity> getStaffs() {
         return staffs;
