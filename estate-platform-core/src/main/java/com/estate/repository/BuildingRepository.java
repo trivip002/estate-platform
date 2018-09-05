@@ -12,8 +12,10 @@ import java.util.List;
 public interface BuildingRepository extends JpaRepository<BuildingEntity, Long> {
     // lấy tất cả tòa nhà theo user
     Page<BuildingEntity> findByStaffs_id(Pageable pageable,long userId);
+    long countByStaffs_id(long userId);
     //lấy tòa nhà ưu tiên theo user
     Page<BuildingEntity> findByStaffsPrioritize_id(Pageable pageable,long userId);
+    long countByStaffsPrioritize_id(long userId);
     //lấy tòa nhà ưu tiên theo user
     List<BuildingEntity> findByStaffsPrioritize_id(long userId);
 

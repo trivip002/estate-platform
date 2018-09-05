@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,UserRepo
     long countByStatus(int status);
     boolean existsByUserNameOrEmail(String userName,String email);
     boolean existsByUserNameOrEmailAndIdIsNotIn(String userName, String email, long Id);
+    List<UserEntity> findByBuildings_Id(long buildingId);
 }

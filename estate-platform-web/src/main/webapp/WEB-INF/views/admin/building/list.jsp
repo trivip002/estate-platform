@@ -136,8 +136,10 @@
                                                title="Cập nhật tòa nhà" href='<c:url value="/admin/building/edit?id=${tableList.id}"/>'><i class="fa fa-edit" aria-hidden="true"></i></a>
                                             <a class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip"
                                                title="Chi tiết tòa nhà" href='<c:url value="/admin/building/detail/${tableList.id}"/>'><i class="fa fa-external-link" aria-hidden="true"></i></a>
-                                            <a class="btn btn-sm btn-primary btn-edit" data-toggle="modal" data-target ="#exampleModal" data ="${tableList.id}" id="${tableList.id}"
-                                               title="Giao cho user quản lý" href='<c:url value="#"/>'><i class="fa fa-users" aria-hidden="true"></i></a>
+                                            <security:authorize access="hasRole('MANAGER')">
+                                                <a class="btn btn-sm btn-primary btn-edit" data-toggle="modal" data-target ="#exampleModal" data ="${tableList.id}" id="${tableList.id}"
+                                                   title="Giao cho user quản lý" href='<c:url value="#"/>'><i class="fa fa-users" aria-hidden="true"></i></a>
+                                            </security:authorize>
                                         </display:column>
                                     </display:table>
                                 </div>
@@ -149,33 +151,46 @@
         </div>
     </form:form>
     <input type="hidden" value="<%=SecurityUtils.getPrincipal().getId()%>" id="userId">
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Giao cho user</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <span>Mã tòa nhà: ${tableList.id}</span>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right">Nhập username</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="userName">
+    <security:authorize access="hasRole('MANAGER')">
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Giao cho user</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span>Mã tòa nhà: ${tableList.id}</span>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right">Danh sách user đã được giao</label>
+                                    <div class="col-sm-9">
+                                        <ul style="list-style-type:square">
+                                            <c:forEach var = "i" items="${model.listResult.get(0).userAssignment}">
+                                                <li>${i.userName}</li>
+                                            </c:forEach>
+
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnAdd">Add</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id ="btnSave">Lưu</button>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right">Nhập username</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="userName">
+                                    </div>
+                                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnAdd">Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id ="btnSave">Lưu</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </security:authorize>
 </div>
 <script type="text/javascript">
     var users = "";

@@ -91,7 +91,8 @@ public class UserService implements IUserService {
     public UserDTO insert(UserDTO userDTO) {
         UserEntity userEntity = userConverter.convertToEntity(userDTO);
         userEntity.setRoleList(roleRepository.findOneByCode(userDTO.getRoleCode()));
-        String pass = RandomGenerator.generateRandom(8);
+        //String pass = RandomGenerator.generateRandom(8);
+        String pass = "123456";
         //userEntity.setPassword(Md5Utils.convertToMd5(pass));
         userEntity.setPassword(passwordEncoder.encode(pass));
         userEntity.setStatus(1);
@@ -146,6 +147,17 @@ public class UserService implements IUserService {
             users.put(item.getId().toString(), item.getUserName());
         });
         return users;
+    }
+
+    @Override
+    public List<UserDTO> getUsersByBuilding(long buildingId) {
+        List<UserEntity> entities = userRepository.findByBuildings_Id(buildingId);
+        List<UserDTO> dtos = new ArrayList<>();
+        for(UserEntity item : entities){
+            UserDTO dto = userConverter.convertToDto(item);
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
 }

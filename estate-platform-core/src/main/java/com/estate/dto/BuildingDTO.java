@@ -42,6 +42,7 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private List<UserDTO> users;
     private String user;
     private int prioritize;
+    private List<UserDTO> userAssignment;
 
     public String getUser() {
         return user;
@@ -330,6 +331,14 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
 
     public void setPrioritize(int prioritize) {
         this.prioritize = prioritize;
+    }
+
+    public List<UserDTO> getUserAssignment() {
+        return userAssignment;
+    }
+
+    public void setUserAssignment(List<UserDTO> userAssignment) {
+        this.userAssignment = userAssignment;
     }
 
 

@@ -45,7 +45,7 @@ public class BuildingController {
                                      HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/building/list");
         DisplayTagUtils.initSearchBean(request, model);
-        model.setMaxPageItems(10);
+        model.setMaxPageItems(5);
         Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
         Long userId = SecurityUtils.getPrincipal().getId();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,12 +55,13 @@ public class BuildingController {
         if(prioritize != null){
             mav.addObject("prioritize",1);
             buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1,userId,isManager);
+            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),1,userId,isManager));
         }
         else {
             buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,0,userId,isManager);
+            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),0,userId,isManager));
         }
         model.setListResult(buildings);
-        model.setTotalItems(buildingService.getTotalItems(model.getSearchValue()));
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);
         return mav;

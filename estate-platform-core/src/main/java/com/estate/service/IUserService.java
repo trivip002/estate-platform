@@ -17,4 +17,5 @@ public interface IUserService {
 	void deleteUser(long[] ids);
 	void checkUserNameOrEmailExist(String userName,String email,Long id) throws MyException;
 	Map<String, String> getUsers();
+	List<UserDTO> getUsersByBuilding(long buildingId);
 }

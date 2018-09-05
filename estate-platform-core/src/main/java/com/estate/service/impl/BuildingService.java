@@ -11,6 +11,7 @@ import com.estate.repository.DistrictRepository;
 import com.estate.repository.UserRepository;
 import com.estate.service.IBuildingService;
 import com.estate.service.IDistrictService;
+import com.estate.service.IUserService;
 import com.estate.utils.UploadFileUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +49,9 @@ public class BuildingService implements IBuildingService {
     private IDistrictService districtService;
 
     @Autowired
+    private IUserService userService;
+
+    @Autowired
     private UploadFileUtils fileUtils;
 
     @Value("${dir.default}")
@@ -61,20 +65,16 @@ public class BuildingService implements IBuildingService {
             if (searchValue != null) {
                 //usersPage = userRepository.findByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue, pageable);
             } else {
-                if(isManager){ // manager
-                    if(prioritize == 1){
-                        buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
-                    }else {
+                if(prioritize == 1){
+                    buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
+                }else{
+                    if(isManager){ // manager
                         buildingsPage = buildingRepository.findAll(pageable);
-                    }
-                }else {// user
-                    if(prioritize == 1){
-                        buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
-                    }else {
+
+                    }else {// user
                         buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
                     }
                 }
-
             }
             for (BuildingEntity item : buildingsPage.getContent()) {
                 BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
@@ -87,6 +87,7 @@ public class BuildingService implements IBuildingService {
                     }
                 }
                 buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard());
+                buildingDTO.setUserAssignment(userService.getUsersByBuilding(buildingDTO.getId()));
                 result.add(buildingDTO);
             }
         return result;
@@ -94,12 +95,23 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
-    public int getTotalItems(String searchValue) {
+    public int getTotalItems(String searchValue,int prioritize,Long userId,boolean isManager) {
         int totalItem = 0;
         if (searchValue != null) {
             //totalItem = (int) userRepository.countByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue) - totalItemDelete;
         } else {
-            totalItem = (int) buildingRepository.count();
+            if(prioritize == 1){
+                totalItem =(int) buildingRepository.countByStaffsPrioritize_id(userId);
+            }
+            else{
+                if(isManager){ // manager
+                    totalItem = (int) buildingRepository.count();
+
+                }else {// user
+                    totalItem =(int) buildingRepository.countByStaffs_id(userId);
+                }
+            }
+
         }
         return totalItem;
     }
