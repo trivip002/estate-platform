@@ -168,9 +168,9 @@
                                     <label class="col-sm-3 control-label no-padding-right">Danh sách user đã được giao</label>
                                     <div class="col-sm-9">
                                         <ul style="list-style-type:square">
-                                            <c:forEach var = "i" items="${model.listResult.get(0).userAssignment}">
-                                                <li>${i.userName}</li>
-                                            </c:forEach>
+                                            <%--<c:forEach var = "i" items="${model.listResult.get(0).userAssignment}">--%>
+                                                <%--<li>${i.userName}</li>--%>
+                                            <%--</c:forEach>--%>
 
                                         </ul>
                                     </div>

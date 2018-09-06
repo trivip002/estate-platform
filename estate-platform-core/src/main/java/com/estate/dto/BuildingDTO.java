@@ -8,11 +8,12 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private static final long serialVersionUID = 4428522696190004907L;
 
     private String name;
-    private String districtCode;
     private Map<String, String> districts;
     private String ward;
     private String street;
     private String address;
+    private String district;
+    private String districtName;
     private String structure;
     private String floorArea;
     private String direction;
@@ -79,13 +80,6 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
         this.name = name;
     }
 
-    public String getDistrictCode() {
-        return districtCode;
-    }
-
-    public void setDistrictCode(String districtCode) {
-        this.districtCode = districtCode;
-    }
 
     public String getAddress() {
         return address;
@@ -341,5 +335,20 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
         this.userAssignment = userAssignment;
     }
 
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
 
 }

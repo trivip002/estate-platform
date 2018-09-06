@@ -47,19 +47,15 @@ public class BuildingController {
         DisplayTagUtils.initSearchBean(request, model);
         model.setMaxPageItems(5);
         Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
-        Long userId = SecurityUtils.getPrincipal().getId();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isManager = authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("MANAGER"));
         List<BuildingDTO> buildings;
         if(prioritize != null){
             mav.addObject("prioritize",1);
-            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1,userId,isManager);
-            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),1,userId,isManager));
+            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1);
+            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),1));
         }
         else {
-            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,0,userId,isManager);
-            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),0,userId,isManager));
+            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,0);
+            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),0));
         }
         model.setListResult(buildings);
         initMessageResponse(mav, request);
@@ -88,7 +84,6 @@ public class BuildingController {
     public ModelAndView getbuildingDetailById(@PathVariable("id") long id) {
         ModelAndView mav = new ModelAndView("admin/building/detail");
         mav.addObject(SystemConstant.MODEL, buildingService.findBuildingById(id));
-
         return mav;
     }
 

@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">Quận</label>
                             <div class="col-sm-9">
-                                <form:select path="districtCode" id="district">
+                                <form:select path="district" id="district">
                                     <form:option value="" label="--- Quận ---"/>
                                     <form:options items="${model.districts}" />
                                 </form:select>
@@ -346,6 +346,7 @@
             }
         });
         dataArray["typeArrays"] = typeArray;
+        dataArray["district"] = $("#district").val();
         var files = $('#uploadImage')[0].files[0];
         var id = $('#buildingId').val();
         if (files == undefined && id != "") {//update

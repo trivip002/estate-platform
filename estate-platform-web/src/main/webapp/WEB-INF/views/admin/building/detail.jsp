@@ -61,7 +61,7 @@
                                         Vị trí
                                     </td>
                                     <td>
-                                        ${model.street},${model.ward},${model.districts.get(model.districtCode)}
+                                        ${model.street},${model.ward},${model.districtName}
                                     </td>
                                 </tr>
 

@@ -12,6 +12,7 @@ import com.estate.repository.UserRepository;
 import com.estate.service.IBuildingService;
 import com.estate.service.IDistrictService;
 import com.estate.service.IUserService;
+import com.estate.utils.SecurityUtils;
 import com.estate.utils.UploadFileUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
@@ -57,11 +60,15 @@ public class BuildingService implements IBuildingService {
     @Value("${dir.default}")
     private String dirDefault;
 
+    private Long userId;
+    private boolean isManager;
+
 
     @Override
-    public List<BuildingDTO> getBuildingsByPrioritizeAndUser(String searchValue, Pageable pageable,int prioritize,Long userId,boolean isManager) {
+    public List<BuildingDTO> getBuildingsByPrioritizeAndUser(String searchValue, Pageable pageable,int prioritize) {
         List<BuildingDTO> result = new ArrayList<>();
         Page<BuildingEntity> buildingsPage = null;
+        getUserAndRole();
             if (searchValue != null) {
                 //usersPage = userRepository.findByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue, pageable);
             } else {
@@ -86,7 +93,8 @@ public class BuildingService implements IBuildingService {
                         }
                     }
                 }
-                buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard());
+                buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrictName());
+                //lấy những user đã đc giao cho tòa nhà
                 buildingDTO.setUserAssignment(userService.getUsersByBuilding(buildingDTO.getId()));
                 result.add(buildingDTO);
             }
@@ -95,8 +103,9 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
-    public int getTotalItems(String searchValue,int prioritize,Long userId,boolean isManager) {
+    public int getTotalItems(String searchValue,int prioritize) {
         int totalItem = 0;
+        getUserAndRole();
         if (searchValue != null) {
             //totalItem = (int) userRepository.countByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue) - totalItemDelete;
         } else {
@@ -111,10 +120,17 @@ public class BuildingService implements IBuildingService {
                     totalItem =(int) buildingRepository.countByStaffs_id(userId);
                 }
             }
-
         }
         return totalItem;
     }
+
+    void getUserAndRole(){
+        userId = SecurityUtils.getPrincipal().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        isManager = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("MANAGER"));
+    }
+
 
     private void saveImage(BuildingDTO buildingDTO){
         if(buildingDTO.getAvatarBase64() != null){
@@ -133,7 +149,6 @@ public class BuildingService implements IBuildingService {
         saveImage(buildingDTO);
         buildingDTO.setPrioritize(0);
         BuildingEntity buildingEntity = buildingConverter.convertToEntity(buildingDTO);
-        buildingEntity.setDistrict(districtRepository.findOneByCode(buildingDTO.getDistrictCode()));
         buildingEntity.setTypes(StringUtils.join(buildingDTO.getTypeArrays(), ","));
         buildingEntity = buildingRepository.save(buildingEntity);
         return buildingConverter.convertToDto(buildingEntity);
@@ -145,7 +160,7 @@ public class BuildingService implements IBuildingService {
         BuildingEntity oldBuilding = buildingRepository.findOne(id);
         oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
         oldBuilding.setCarParkingCharge(updateBuilding.getCarParkingCharge());
-        oldBuilding.setDistrict(districtRepository.findOneByCode(updateBuilding.getDistrictCode()));
+        oldBuilding.setDistrict(updateBuilding.getDistrict());
         oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
         oldBuilding.setDeposit(updateBuilding.getDeposit());
         oldBuilding.setDescription(updateBuilding.getDescription());
@@ -233,7 +248,8 @@ public class BuildingService implements IBuildingService {
     public BuildingDTO findBuildingById(long id) {
         BuildingEntity entity = buildingRepository.findOne(id);
         BuildingDTO dto = buildingConverter.convertToDto(entity);
-        dto.setDistrictCode(entity.getDistrict().getCode());
+        dto.setDistrict(entity.getDistrict());
+        dto.setDistrictName(districtRepository.findOneByCode(entity.getDistrict()).getName());
         dto.setDistricts(districtService.getDistricts());
         return dto;
     }

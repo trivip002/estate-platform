@@ -42,6 +42,17 @@ public class UserEntity extends BaseEntity
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "staffsPrioritize")
     private List<BuildingEntity> buildingsPrioritize;
 
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
+    private List<CustomerEntity> customers;
+
+    public List<CustomerEntity> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<CustomerEntity> customers) {
+        this.customers = customers;
+    }
+
     public List<BuildingEntity> getBuildingsPrioritize() {
         return buildingsPrioritize;
     }

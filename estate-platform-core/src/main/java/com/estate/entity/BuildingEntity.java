@@ -69,6 +69,9 @@ public class BuildingEntity extends BaseEntity {
     @Column
     private int prioritize;
 
+    @Column
+    private String district;
+
     public int getPrioritize() {
         return prioritize;
     }
@@ -76,11 +79,6 @@ public class BuildingEntity extends BaseEntity {
     public void setPrioritize(int prioritize) {
         this.prioritize = prioritize;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "district_id", nullable = false)
-    private DistrictEntity district;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "staff_building", joinColumns = {
@@ -302,11 +300,11 @@ public class BuildingEntity extends BaseEntity {
         this.avatar = avatar;
     }
 
-    public DistrictEntity getDistrict() {
+    public String getDistrict() {
         return district;
     }
 
-    public void setDistrict(DistrictEntity district) {
+    public void setDistrict(String district) {
         this.district = district;
     }
 

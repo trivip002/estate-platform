@@ -3,7 +3,7 @@
 <c:url var="formUrl" value="/api/admin/user"/>
 <html>
 <head>
-    <title>Chỉnh sửa người dùng</title>
+    <title>Chỉnh sửa khách hàng</title>
 </head>
 <body>
 <div class="main-content">

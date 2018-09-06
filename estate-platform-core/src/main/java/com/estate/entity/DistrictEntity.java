@@ -15,9 +15,6 @@ public class DistrictEntity extends BaseEntity {
     @Column(unique = true)
     private  String code;
 
-    @OneToMany(mappedBy="district", fetch = FetchType.EAGER)
-    private List<BuildingEntity> buildings;
-
     public String getName() {
         return name;
     }
@@ -34,11 +31,4 @@ public class DistrictEntity extends BaseEntity {
         this.code = code;
     }
 
-    public List<BuildingEntity> getBuildings() {
-        return buildings;
-    }
-
-    public void setBuildings(List<BuildingEntity> buildings) {
-        this.buildings = buildings;
-    }
 }
