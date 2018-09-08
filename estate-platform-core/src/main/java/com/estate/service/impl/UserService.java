@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService {
@@ -153,7 +154,14 @@ public class UserService implements IUserService {
 		}
 	}
 
-	@Override
+    @Override
+    public List<String> getAllUserName() {
+		List<UserEntity> userEntities = userRepository.findAll();
+		List<String> result = userEntities.stream().map(item->item.getUserName()).collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
 	public int getTotalItem(String searchValue) {
 		int totalItem = 0 ;
 		if(searchValue != null) {

@@ -21,15 +21,22 @@ import java.util.Map;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @RequestMapping(value = "/admin/customer/list", method = RequestMethod.GET)
     public ModelAndView homePage(@ModelAttribute(SystemConstant.MODEL)CustomerDTO model,
                                  HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/customer/list");
         DisplayTagUtils.initSearchBean(request,model);
-        Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
-        List<CustomerDTO> customerDTOS = customerService.getCustomer(pageable);
-        model.setListResult(customerDTOS);
-        model.setTotalItems(customerService.getTotalItem());
+        if(model.getSearchValue() != null){
+            List<CustomerDTO> customerDTOS = customerService.searchCustomer(model);
+            model.setListResult(customerDTOS);
+            model.setTotalItems(customerService.getTotalItem(model));
+        }else{
+            Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
+            List<CustomerDTO> customerDTOS = customerService.getCustomer(pageable);
+            model.setListResult(customerDTOS);
+            model.setTotalItems(customerService.getTotalItem(model));
+        }
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);
         return mav;

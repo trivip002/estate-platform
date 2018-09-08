@@ -5,6 +5,7 @@ import com.estate.constant.SystemConstant;
 import com.estate.dto.BuildingDTO;
 import com.estate.dto.UserDTO;
 import com.estate.service.impl.BuildingService;
+import com.estate.service.impl.DistrictService;
 import com.estate.service.impl.UserService;
 import com.estate.utils.DisplayTagUtils;
 import com.estate.utils.MessageUtil;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,19 +30,31 @@ public class BuildingController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DistrictService districtService;
+
     @RequestMapping(value = "/admin/building/list", method = RequestMethod.GET)
     public ModelAndView listBuldings(@ModelAttribute(SystemConstant.MODEL)BuildingDTO model,
                                      HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/building/list");
         DisplayTagUtils.initSearchBean(request,model);
-        Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
-        List<BuildingDTO> buildingDTOS = buildingService.getBuilding(pageable);
+        Map<String,String> mapType = buildingService.getMaptype();
+        List<BuildingDTO> buildingDTOS = new ArrayList<>();
+        if(model.getSearchValue() == null){
+            Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
+            buildingDTOS = buildingService.getBuilding(pageable);
+            model.setTotalItems(buildingService.getTotalItems());
+        }else{
+            buildingDTOS = buildingService.searchBuildingsByPrioritizeAndUser(model);
+            model.setTotalItems(buildingService.getTotalItemsSearch(model));
+        }
         model.setListResult(buildingDTOS);
-        model.setTotalItems(buildingService.getTotalItems());
-        List<UserDTO> userDTOS = userService.getAll();
+        model.setDistricts(districtService.getDistricts());
+        List<String> userDTOS = userService.getAllUserName();
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);
         mav.addObject("listUsers", userDTOS);
+        mav.addObject("mapType",mapType);
         return mav;
     }
     @RequestMapping(value = "/admin/building/favorite", method = RequestMethod.GET)

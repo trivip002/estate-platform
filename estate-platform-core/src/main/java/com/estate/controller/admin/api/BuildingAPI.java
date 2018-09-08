@@ -21,7 +21,7 @@ public class BuildingAPI {
         return ResponseEntity.ok(buildingService.update(buildingDTO,id));
     }
     @PutMapping
-    public ResponseEntity<String> changePriority(@RequestBody long id ){
+    public ResponseEntity<String> updatePriority(@RequestBody long id ){
         buildingService.changePriority(id);
         return ResponseEntity.ok("success");
     }

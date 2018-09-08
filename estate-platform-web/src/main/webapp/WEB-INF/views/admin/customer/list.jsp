@@ -38,9 +38,55 @@
                             </div>
                         </c:if>
                         <!-- PAGE CONTENT BEGINS -->
-                        <security:authorize access="hasRole('ADMIN')">
-                            <div class="row">
-                                <div class="col-xs-12">s
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="widget-box table-filter">
+                                    <div class="widget-header">
+                                        <h4 class="widget-title">Tìm kiếm</h4>
+                                        <div class="widget-toolbar">
+                                            <a href="#" data-action="collapse">
+                                                <i class="ace-icon fa fa-chevron-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="name" id="direction"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Tên khách hàng"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="email" id="type"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="email"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="phoneNumber" id="type"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Số điện thoại"/>
+                                                        </div>
+                                                    </div>
+                                                    <form:hidden path="searchValue" id="searchValue" />
+                                                    <div class="col-sm-6">
+                                                        <button id="btnSearch" type="button"
+                                                                class="btn btn-sm btn-success">
+                                                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110">Tìm kiếm</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <security:authorize access="hasRole('ADMIN')">
                                     <div class="table-btn-controls">
                                         <div class="pull-right tableTools-container">
                                             <div class="dt-buttons btn-overlap btn-group">
@@ -59,9 +105,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </security:authorize>
                             </div>
-                        </security:authorize>
+                        </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="table-responsive">
@@ -84,11 +130,17 @@
                                         <display:column headerClass="textarea" property="process" title="Quá trình CSKH"/>
                                         <display:column headerClass="text-left" property="modifiedBy" title="Người nhập"/>
                                         <display:column headerClass="text-left" property="createdDate" title="Ngày nhập"/>
-                                        <display:column headerClass="text-left" property="status" title="Tình trạng"/>
                                         <display:column headerClass="col-actions" title="Hợp đồng">
-                                            <a class="btn btn-sm btn-primary btn-success" data-toggle="tooltip" id = "btnChange_${tableList.id}" onclick="changeStatus(${tableList.id})"
-                                               title="Chốt hợp đồng" ><i class="fa fa-plus center" aria-hidden="true"></i>
-                                            </a>
+                                            <c:if test="${tableList.status == 1}">
+                                                <a class="btn btn-sm btn-primary btn-danger" data-toggle="tooltip" id = "btnChange_${tableList.id}" onclick="changeStatus(${tableList.id})"
+                                                   title="Hủy hợp đồng" ><i class="fa fa-plus center" aria-hidden="true"></i>
+                                                </a>
+                                            </c:if>
+                                            <c:if test="${tableList.status == 0}">
+                                                <a class="btn btn-sm btn-primary btn-success" data-toggle="tooltip" id = "btnChange_${tableList.id}" onclick="changeStatus(${tableList.id})"
+                                                   title="Chốt hợp đồng" ><i class="fa fa-plus center" aria-hidden="true"></i>
+                                                </a>
+                                            </c:if>
                                         </display:column>
                                         <display:column headerClass="col-actions" title="Thao tác">
                                             <a class="btn btn-sm btn-primary" data-toggle="tooltip"

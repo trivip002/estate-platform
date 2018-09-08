@@ -83,6 +83,25 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <th>
+                                            <c:if test="${model.status == 1}">
+                                                <input type="checkbox" name="checkList1" value="status" class="check-box-element" checked="checked"/>Đã ký
+                                                <input type="checkbox" name="checkList2" value="status" class="check-box-element"/>Chưa ký
+                                            </c:if>
+                                            <c:if test="${model.status != 1}">
+                                                <input type="checkbox" name="checkList1" value="status" class="check-box-element" />Đã ký
+                                                <input type="checkbox" name="checkList2" value="status" class="check-box-element" checked="checked"/>Chưa ký
+                                            </c:if>
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            <p>${model.note}</p>
+                                        </th>
+                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>

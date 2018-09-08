@@ -40,30 +40,179 @@
                             </div>
                         </c:if>
                         <!-- PAGE CONTENT BEGINS -->
-                        <security:authorize access="hasRole('ADMIN')">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="table-btn-controls">
-                                        <div class="pull-right tableTools-container">
-                                            <div class="dt-buttons btn-overlap btn-group">
-                                                <a flag="info" class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
-                                                   data-toggle="tooltip" title="Thêm tòa nhà" href='<c:url value="/admin/building/edit"/>'>
-                                                    <span>
-                                                    <i class="fa fa-plus-circle bigger-110 purple"></i>
-                                                </span>
-                                                </a>
-                                                <button id="btnDelete" type="button" class="dt-button buttons-html5 btn btn-white btn-primary btn-bold" disabled
-                                                        data-toggle="tooltip" title="Xóa tòa nhà" onclick="warningBeforeDelete()">
-                                                    <span>
-                                                    <i class="fa fa-trash-o bigger-110 pink"></i>
-                                                	</span>
-                                                </button>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="widget-box table-filter">
+                                    <div class="widget-header">
+                                        <h4 class="widget-title">Tìm kiếm</h4>
+                                        <div class="widget-toolbar">
+                                            <a href="#" data-action="collapse">
+                                                <i class="ace-icon fa fa-chevron-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <div class="fg-line">
+                                                            <form:input path="name" cssClass="form-control input-sm"
+                                                                        placeholder="Tên tòa nhà"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="floorArea"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.acreageFloor}"
+                                                                   placeholder="Diện tích sàn"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:select path="district" id="district">
+                                                                <form:option value="" label="--- Quận ---"/>
+                                                                <form:options items="${model.districts}" />
+                                                            </form:select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="precint" id="ward"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Phường"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="street" id="street"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Đường"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="direction" id="direction"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Hướng"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="ranking" id="type"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Hạng"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="areaFrom"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.areaFrom}"
+                                                                   placeholder="Diện tích từ" id="areaFrom"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="areaTo"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.areaTo}"
+                                                                   placeholder="Diện tích đến" id="areaTo"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="costFrom"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.priceFrom}"
+                                                                   placeholder="Gía thuê từ" id="costFrom"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="costTo"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.priceTo}"
+                                                                   placeholder="Gía thuê đến" id="costTo"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="managerName" id="managerName"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Tên quản lý"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="managerPhone" id="managerPhone"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Điện thoại quản lý"/>
+                                                        </div>
+                                                    </div>
+                                                    <c:if test="${urlMapping != '/admin/building/assignment'}">
+                                                        <div class="col-sm-4">
+                                                            <div class="fg-line">
+                                                                <form:select path="staffName" id="staffName">
+                                                                    <form:option value=""
+                                                                                 label="--- Chọn nhân viên phụ trách ---"/>
+                                                                    <form:options items="${listUsers}"/>
+                                                                </form:select>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
+                                                    <form:hidden path="searchValue" id="searchValue" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <div class="fg-line">
+                                                            <form:checkboxes path="typeArray" items="${mapType}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <button id="btnSearch" type="button"
+                                                                class="btn btn-sm btn-success">
+                                                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110">Tìm kiếm</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </security:authorize>
+                            <security:authorize access="hasRole('ADMIN')">
+                                <div class="table-btn-controls">
+                                    <div class="pull-right tableTools-container">
+                                        <div class="dt-buttons btn-overlap btn-group">
+                                            <a flag="info" class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
+                                               data-toggle="tooltip" title="Thêm tòa nhà" href='<c:url value="/admin/building/edit"/>'>
+                                                    <span>
+                                                    <i class="fa fa-plus-circle bigger-110 purple"></i>
+                                                </span>
+                                            </a>
+                                            <button id="btnDelete" type="button" class="dt-button buttons-html5 btn btn-white btn-primary btn-bold" disabled
+                                                    data-toggle="tooltip" title="Xóa tòa nhà" onclick="warningBeforeDelete()">
+                                                    <span>
+                                                    <i class="fa fa-trash-o bigger-110 pink"></i>
+                                                	</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </security:authorize>
+                        </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="table-responsive">
@@ -114,19 +263,6 @@
                                                             <div class="modal-header">
                                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                                 <h4 class="modal-title">Giao quyền</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <c:forEach items="${listUsers}" var="item">
-                                                                    <c:forEach items="${tableList.users}" var="subitem">
-                                                                        <c:if test="${item.id == subitem.id}">
-                                                                            <input type="checkbox" name="${subitem.userName}" value="${subitem.userName}" id="${subitem.id}"class="check-box-element" checked = "checked"/>${item.userName}<br/>
-                                                                        </c:if>
-                                                                        <c:if test="${item.id != subitem.id}">
-                                                                            <input type="checkbox" name="${subitem.userName}" value="${subitem.userName}" id="${subitem.id}"class="check-box-element"/>${item.userName}<br/>
-                                                                        </c:if>
-                                                                    </c:forEach>
-                                                                </c:forEach>
-                                                                <button type="button" class="dt-button buttons-colvis btn btn-white btn-primary btn-bold" data-dismiss="modal" onclick="protocolUser(${tableList.id})">Giao quyền cho User</button>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal" >Đóng</button>

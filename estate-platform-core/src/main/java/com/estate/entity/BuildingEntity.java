@@ -36,17 +36,19 @@ public class BuildingEntity extends BaseEntity {
     @Column
     private String link;
     @Column
+    private String types;
+    @Column
     private String map;
     @Column
     private String thumnail;
     @Column
     private String basementNumber;
     @Column
-    private String acreageFloor;
+    private Integer acreageFloor;
     @Column
-    private String acreageRent;
+    private Integer acreageRent;
     @Column
-    private String rentCost;
+    private Integer rentCost;
     @Column
     private String serviceCharge;
     @Column
@@ -61,8 +63,6 @@ public class BuildingEntity extends BaseEntity {
     private String pay;
     @Column
     private String agencyCharge;
-    @Column
-    private String types;
     @Column
     private int priority;
 
@@ -198,30 +198,6 @@ public class BuildingEntity extends BaseEntity {
         this.basementNumber = basementNumber;
     }
 
-    public String getAcreageFloor() {
-        return acreageFloor;
-    }
-
-    public void setAcreageFloor(String acreageFloor) {
-        this.acreageFloor = acreageFloor;
-    }
-
-    public String getAcreageRent() {
-        return acreageRent;
-    }
-
-    public void setAcreageRent(String acreageRent) {
-        this.acreageRent = acreageRent;
-    }
-
-    public String getRentCost() {
-        return rentCost;
-    }
-
-    public void setRentCost(String rentCost) {
-        this.rentCost = rentCost;
-    }
-
     public String getServiceCharge() {
         return serviceCharge;
     }
@@ -317,5 +293,29 @@ public class BuildingEntity extends BaseEntity {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public Integer getAcreageFloor() {
+        return acreageFloor;
+    }
+
+    public void setAcreageFloor(Integer acreageFloor) {
+        this.acreageFloor = acreageFloor;
+    }
+
+    public Integer getAcreageRent() {
+        return acreageRent;
+    }
+
+    public void setAcreageRent(Integer acreageRent) {
+        this.acreageRent = acreageRent;
+    }
+
+    public Integer getRentCost() {
+        return rentCost;
+    }
+
+    public void setRentCost(Integer rentCost) {
+        this.rentCost = rentCost;
     }
 }

@@ -22,9 +22,9 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String imageName;
     private String thumbnailBase64;
     private String basementNumber;
-    private String acreageFloor;
-    private String acreageRent;
-    private String rentCost;
+    private Integer acreageFloor;
+    private Integer acreageRent;
+    private Integer rentCost;
     private String serviceCharge;
     private String carCharge;
     private String overtimeCharge;
@@ -34,12 +34,86 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String agencyCharge;
     private String types;
     private String district;
-    private int priority;
+    private Map<String,String> districts;
+    private int priority = 0;
     private String[] typeArray = new String[]{};
     private List<UserDTO> staffs;
     private List<UserDTO> users;
+    private Integer areaFrom;
+    private Integer areaTo;
+    private Integer priceFrom;
+    private Integer priceTo;
+    private String managerName;
+    private String managerPhone;
+    private String staffName;
+
+    public Integer getAreaFrom() {
+        return areaFrom;
+    }
+
+    public void setAreaFrom(Integer areaFrom) {
+        this.areaFrom = areaFrom;
+    }
+
+    public Integer getAreaTo() {
+        return areaTo;
+    }
+
+    public void setAreaTo(Integer areaTo) {
+        this.areaTo = areaTo;
+    }
+
+    public Integer getPriceFrom() {
+        return priceFrom;
+    }
+
+    public void setPriceFrom(Integer priceFrom) {
+        this.priceFrom = priceFrom;
+    }
+
+    public Integer getPriceTo() {
+        return priceTo;
+    }
+
+    public void setPriceTo(Integer priceTo) {
+        this.priceTo = priceTo;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public String getManagerPhone() {
+        return managerPhone;
+    }
+
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+
     public String getName() {
         return name;
+    }
+
+
+    public Map<String, String> getDistricts() {
+        return districts;
+    }
+
+    public void setDistricts(Map<String, String> districts) {
+        this.districts = districts;
     }
 
     public void setName(String name) {
@@ -157,30 +231,6 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
 
     public void setBasementNumber(String basementNumber) {
         this.basementNumber = basementNumber;
-    }
-
-    public String getAcreageFloor() {
-        return acreageFloor;
-    }
-
-    public void setAcreageFloor(String acreageFloor) {
-        this.acreageFloor = acreageFloor;
-    }
-
-    public String getAcreageRent() {
-        return acreageRent;
-    }
-
-    public void setAcreageRent(String acreageRent) {
-        this.acreageRent = acreageRent;
-    }
-
-    public String getRentCost() {
-        return rentCost;
-    }
-
-    public void setRentCost(String rentCost) {
-        this.rentCost = rentCost;
     }
 
     public String getServiceCharge() {
@@ -305,5 +355,29 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public Integer getAcreageFloor() {
+        return acreageFloor;
+    }
+
+    public void setAcreageFloor(Integer acreageFloor) {
+        this.acreageFloor = acreageFloor;
+    }
+
+    public Integer getAcreageRent() {
+        return acreageRent;
+    }
+
+    public void setAcreageRent(Integer acreageRent) {
+        this.acreageRent = acreageRent;
+    }
+
+    public Integer getRentCost() {
+        return rentCost;
+    }
+
+    public void setRentCost(Integer rentCost) {
+        this.rentCost = rentCost;
     }
 }

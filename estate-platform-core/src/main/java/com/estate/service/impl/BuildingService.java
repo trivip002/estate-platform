@@ -1,10 +1,12 @@
 package com.estate.service.impl;
 
+import com.estate.Builder.BuildingBuilder;
 import com.estate.converter.BuildingConverter;
 import com.estate.converter.UserConverter;
 import com.estate.dto.UserDTO;
 import com.estate.entity.UserEntity;
 import com.estate.enums.OptionEnum;
+import com.estate.paging.PageRequest;
 import com.estate.repository.UserRepository;
 import com.estate.utils.SecurityUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -48,15 +51,23 @@ public class BuildingService implements IBuildingService {
     @Value("${dir.default}")
     private String dirDefault;
 
+    private BuildingBuilder getBuildingBuilder(BuildingDTO modelSearch) {
+        return new BuildingBuilder.Builder()
+                .setName(modelSearch.getName())
+                .setStreet(modelSearch.getStreet())
+                .setAcreageFloor(modelSearch.getAcreageFloor())
+                .setAreaFrom(modelSearch.getAreaFrom())
+                .setAreaTo(modelSearch.getAreaTo())
+                .setPriceFrom(modelSearch.getPriceFrom())
+                .setPriceTo(modelSearch.getPriceTo())
+                .setTypeArrays(modelSearch.getTypeArray())
+                .setStaffName(modelSearch.getStaffName())
+                .build();
+    }
+
     @Override
     public List<BuildingDTO> getBuilding(Pageable pageable) {
-        Page<BuildingEntity> newPage = buildingRepository.findAll(pageable);
-        List<BuildingEntity> buildingEntities = newPage.getContent();
-        List<BuildingDTO> buildingDTOS = new ArrayList<>();
-        for(BuildingEntity item : buildingEntities){
-            BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-            buildingDTOS.add(buildingDTO);
-        }
+        List<BuildingDTO> buildingDTOS = buildingRepository.findAll(pageable).getContent().stream().map(item -> buildingConverter.convertToDto(item)).collect(Collectors.toList());
         for(BuildingDTO item:buildingDTOS){
             for(UserDTO user : item.getUsers()){
                 if(user.getId() == SecurityUtils.getPrincipal().getId()){
@@ -68,6 +79,26 @@ public class BuildingService implements IBuildingService {
         return buildingDTOS;
     }
 
+    @Override
+    public List<BuildingDTO> searchBuildingsByPrioritizeAndUser(BuildingDTO modelSearch) {
+        com.estate.paging.Pageable pageableCustom = new PageRequest(modelSearch.getPage(), modelSearch.getMaxPageItems());
+        List<?> buildingEntities = buildingRepository.findAll(getBuildingBuilder(modelSearch), pageableCustom);
+        return convertToBuildingDTOS(buildingEntities);
+    }
+    private List<BuildingDTO> convertToBuildingDTOS(List<?> building){
+        List<BuildingDTO> buildingDTOS = new ArrayList<>();
+        for(Object item:building){
+            BuildingEntity buildingEntity = new BuildingEntity();
+            try{
+                buildingEntity = (BuildingEntity) item;
+            }catch (Exception e){
+                buildingEntity = (BuildingEntity)((Object[])item)[0];
+            }
+            BuildingDTO buildingDTO = buildingConverter.convertToDto(buildingEntity);
+            buildingDTOS.add(buildingDTO);
+        }
+        return buildingDTOS;
+    }
     @Override
     public List<BuildingDTO> getfavoriteBuilding(Pageable pageable) {
         UserEntity userEntity = userRepository.findOne(SecurityUtils.getPrincipal().getId());
@@ -87,6 +118,7 @@ public class BuildingService implements IBuildingService {
         buildingDTO.setTypes(StringUtils.join(buildingDTO.getTypeArray(),","));
         buildingDTO.setPriority(0);
         BuildingEntity buildingEntity = buildingConverter.convertToEntity(buildingDTO);
+        buildingEntity.setStaffs(userRepository.findByRoles_code("ADMIN"));
         buildingRepository.save(buildingEntity);
         return buildingDTO;
     }
@@ -101,9 +133,8 @@ public class BuildingService implements IBuildingService {
         buildingDTO.setPriority(0);
         saveImange(buildingDTO);
         BuildingEntity buildingEntity = buildingConverter.convertToEntity(buildingDTO);
-        List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.addAll(owlBuilding.getStaffs());
-        buildingEntity.setStaffs(userEntities);
+        buildingEntity.setStaffs(owlBuilding.getStaffs());
+        buildingEntity.setUsers(owlBuilding.getUsers());
         buildingRepository.save(buildingEntity);
         return buildingDTO;
     }
@@ -127,12 +158,17 @@ public class BuildingService implements IBuildingService {
     @Override
     public void changePriority(long id) {
         BuildingEntity buildingEntity = buildingRepository.findOne(id);
-        for(UserEntity item:buildingEntity.getUsers()){
+        /*for(UserEntity item:buildingEntity.getUsers()){
             if(item.getId() == SecurityUtils.getPrincipal().getId()){
                 buildingEntity.getUsers().remove(item);
                 buildingRepository.save(buildingEntity);
                 return;
             }
+        }*/
+        if (buildingEntity.getUsers().stream().anyMatch(item -> item.getId().equals(SecurityUtils.getPrincipal().getId()))) {
+            buildingEntity.getUsers().remove(userRepository.findOne(SecurityUtils.getPrincipal().getId()));
+            buildingRepository.save(buildingEntity);
+            return;
         }
         buildingEntity.getUsers().add(userRepository.findOne(SecurityUtils.getPrincipal().getId()));
         buildingRepository.save(buildingEntity);
@@ -141,6 +177,13 @@ public class BuildingService implements IBuildingService {
     @Override
     public int getTotalItems() {
         return (int) buildingRepository.count();
+    }
+
+    @Override
+    public int getTotalItemsSearch(BuildingDTO modelSearch) {
+        int totalItem = 0;
+        totalItem = buildingRepository.getTotalItems(getBuildingBuilder(modelSearch));
+        return totalItem;
     }
 
     @Override

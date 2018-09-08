@@ -8,12 +8,14 @@ import java.util.Map;
 
 public interface IBuildingService {
     List<BuildingDTO> getBuilding(Pageable pageable);
+    List<BuildingDTO> searchBuildingsByPrioritizeAndUser(BuildingDTO modelSearch);
     List<BuildingDTO> getfavoriteBuilding(Pageable pageable);
     BuildingDTO insert(BuildingDTO buildingDTO);
     BuildingDTO update(BuildingDTO buildingDTO, long id);
     void delete(long[] ids);
     void changePriority(long id);
     int getTotalItems();
+    int getTotalItemsSearch(BuildingDTO modelSearch);
     int getTotalFavoriteItems();
     BuildingDTO getOneById(long id);
     Map<String, String> getMaptype();

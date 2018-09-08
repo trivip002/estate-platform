@@ -6,5 +6,6 @@
         <class>com.estate.entity.RoleEntity</class>
         <class>com.estate.entity.BuildingEntity</class>
         <class>com.estate.entity.CustomerEntity</class>
+        <class>com.estate.entity.DistrictEntity</class>
     </persistence-unit>
 </persistence>

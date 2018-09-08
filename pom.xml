@@ -13,6 +13,9 @@
         <module>estate-platform-web</module>
 		
     </modules>
+	
+	
+	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.version>4.3.13.RELEASE</springframework.version>

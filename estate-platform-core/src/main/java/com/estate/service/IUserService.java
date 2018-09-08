@@ -18,4 +18,5 @@ public interface IUserService
 	void delete(long[] ids);
 	UserDTO getById(long id);
 	String existsUserNameOrEmail(String valueName);
+	List<String> getAllUserName();
 }

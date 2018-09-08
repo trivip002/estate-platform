@@ -40,11 +40,21 @@ INSERT INTO user_role(user_id,role_id) VALUES (8,2);
 INSERT INTO user_role(user_id,role_id) VALUES (9,2);
 INSERT INTO user_role(user_id,role_id) VALUES (10,2);
 
+INSERT INTO district(code,name) VALUES('QUAN_1','quận 1');
+INSERT INTO district(code,name) VALUES('QUAN_2','quận 2');
+INSERT INTO district(code,name) VALUES('QUAN_3','quận 3');
+INSERT INTO district(code,name) VALUES('QUAN_4','quận 4');
+INSERT INTO district(code,name) VALUES('QUAN_5','quận 5');
+INSERT INTO district(code,name) VALUES('QUAN_6','quận 6');
+INSERT INTO district(code,name) VALUES('QUAN_7','quận 7');
+INSERT INTO district(code,name) VALUES('QUAN_8','quận 8');
+INSERT INTO district(code,name) VALUES('QUAN_9','quận 9');
+INSERT INTO district(code,name) VALUES('QUAN_10','quận 10');
 
 insert into building(name ,district ,precint, basementNumber, acreageFloor, acreageRent, rentCost, serviceCharge, carCharge, overtimeCharge, electricBill, deposit, pay, agencyCharge,priority)
-values ('Tòa nhà 1','Tân bình' , 'Phường 5', '2' , '5.15', '7', '3000000', '500000','400000','300000','250000','450000','1500000','570000',0);
+values ('Tòa nhà 1','Tân bình' , 'Phường 5', '2' , 5.15, 7, 3000000, '500000','400000','300000','250000','450000','1500000','570000',0);
 insert into building(name ,district ,precint, basementNumber, acreageFloor, acreageRent, rentCost, serviceCharge, carCharge, overtimeCharge, electricBill, deposit, pay, agencyCharge,priority)
-values ('Tòa nhà 2', 'Gò Vấp', 'Phường 8', '2' , '5.15', '7', '3000000', '500000','400000','300000','250000','450000','1500000','570000',0);
+values ('Tòa nhà 2', 'Gò Vấp', 'Phường 8', '2' , 7, 18, 3000000, '500000','400000','300000','250000','450000','1500000','570000',0);
 
 INSERT INTO assignment(staff_id, building_id) VALUES (1,1);
 INSERT INTO assignment(staff_id, building_id) VALUES (1,2);

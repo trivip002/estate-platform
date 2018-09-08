@@ -1,8 +1,5 @@
 package com.estate.repository;
 
-
-import com.estate.dto.BuildingDTO;
-import com.estate.entity.BuildingEntity;
 import com.estate.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +17,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>
     boolean existsByEmailAndStatus(String email,int status);
     boolean existsByUserNameAndStatus(String userName , int status);
     List<UserEntity> findById(long Id);
+    List<UserEntity> findByRoles_code(String code);
 }
