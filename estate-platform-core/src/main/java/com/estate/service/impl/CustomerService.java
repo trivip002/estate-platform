@@ -73,6 +73,17 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
+    public void updateStatus(long id) {
+        CustomerEntity customerEntity = customerRepository.findOne(id);
+        if(customerEntity.getStatus() == 0){
+            customerEntity.setStatus(1);
+        }else{
+            customerEntity.setStatus(0);
+        }
+        customerRepository.save(customerEntity);
+    }
+
+    @Override
     public int getTotalItem() {
         UserEntity userEntity = userRepository.findOne(SecurityUtils.getPrincipal().getId());
         return (int) customerRepository.countByUsers(userEntity);

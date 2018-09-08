@@ -34,7 +34,7 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String agencyCharge;
     private String types;
     private String district;
-    private int priority;
+    private int priority = 0;
     private String[] typeArray = new String[]{};
     private List<UserDTO> staffs;
     private List<UserDTO> users;

@@ -10,5 +10,6 @@ public interface ICustomerService {
     CustomerDTO findOneById(long id);
     CustomerDTO insert(CustomerDTO customerDTO);
     CustomerDTO update(CustomerDTO customerDTO, long id);
+    void updateStatus(long id);
     int getTotalItem();
 }

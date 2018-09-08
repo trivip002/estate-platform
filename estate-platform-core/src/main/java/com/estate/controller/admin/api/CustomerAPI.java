@@ -19,4 +19,9 @@ public class CustomerAPI {
     public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerDTO, @PathVariable("id") long id){
         return ResponseEntity.ok(customerService.update(customerDTO,id));
     }
+    @PutMapping
+    public ResponseEntity<String> updateStatus(@RequestBody long id){
+        customerService.updateStatus(id);
+        return ResponseEntity.ok("success");
+    }
 }

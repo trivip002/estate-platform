@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -50,13 +51,7 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public List<BuildingDTO> getBuilding(Pageable pageable) {
-        Page<BuildingEntity> newPage = buildingRepository.findAll(pageable);
-        List<BuildingEntity> buildingEntities = newPage.getContent();
-        List<BuildingDTO> buildingDTOS = new ArrayList<>();
-        for(BuildingEntity item : buildingEntities){
-            BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-            buildingDTOS.add(buildingDTO);
-        }
+        List<BuildingDTO> buildingDTOS = buildingRepository.findAll(pageable).getContent().stream().map(item -> buildingConverter.convertToDto(item)).collect(Collectors.toList());
         for(BuildingDTO item:buildingDTOS){
             for(UserDTO user : item.getUsers()){
                 if(user.getId() == SecurityUtils.getPrincipal().getId()){
@@ -127,13 +122,14 @@ public class BuildingService implements IBuildingService {
     @Override
     public void changePriority(long id) {
         BuildingEntity buildingEntity = buildingRepository.findOne(id);
-        for(UserEntity item:buildingEntity.getUsers()){
+        /*for(UserEntity item:buildingEntity.getUsers()){
             if(item.getId() == SecurityUtils.getPrincipal().getId()){
                 buildingEntity.getUsers().remove(item);
                 buildingRepository.save(buildingEntity);
                 return;
             }
-        }
+        }*/
+
         buildingEntity.getUsers().add(userRepository.findOne(SecurityUtils.getPrincipal().getId()));
         buildingRepository.save(buildingEntity);
     }
