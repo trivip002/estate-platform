@@ -117,18 +117,18 @@
                                         <display:column headerClass="text-left" property="agencyCharge" title="Phí môi giới"/>
                                         <c:if test="${prioritize != 1}">
                                             <display:column headerClass="" title="HOT">
-                                                <a href="#" id="${tableList.id}" class="btnPlus">
-                                                    <c:set var = "index" scope = "session" value = "${tableList_rowNum-1}"/>
-                                                    <c:choose>
-                                                        <c:when test="${model.listResult.get(index).prioritize == 1}">
-                                                            <span id="btn_${tableList.id}" class="glyphicon glyphicon-ok"></span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    <%--<span id="btn_${tableList.id}" class="glyphicon glyphicon-plus"></span>--%>
-                                                </a>
+                                                <c:choose>
+                                                    <c:when test="${tableList.prioritize == 1}">
+                                                        <a href="#" buildingId="${tableList.id}" class="btnPriority" action="remove">
+                                                            <span class="glyphicon glyphicon-ok"></span>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:when test="${tableList.prioritize == 0}">
+                                                        <a href="#" buildingId="${tableList.id}" class="btnPriority" action="add">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                        </a>
+                                                    </c:when>
+                                                </c:choose>
                                             </display:column>
                                         </c:if>
                                         <display:column headerClass="col-actions" title="Thao tác">
@@ -203,29 +203,16 @@
     });
 
 
-    $('.btnPlus').click(function (event) {
+    $('.btnPriority').click(function (event) {
         event.preventDefault();
-        id = $(this).attr("id");
-        userId = $('#userId').val();
-        if($('#btn_'+id).hasClass("glyphicon glyphicon-plus")){
-            $('#btn_'+id).removeClass("glyphicon glyphicon-plus");
-            $('#btn_'+id).addClass("glyphicon glyphicon-ok");
-            updatePrioritize(userId,id);
-        }else{
-            $('#btn_'+id).removeClass("glyphicon glyphicon-ok");
-            $('#btn_'+id).addClass("glyphicon glyphicon-plus");
-            deletePrioritize(userId,id);
-        }
-
-
-
-
+        buildingId = $(this).attr("buildingId");
+        action = $(this).attr("action");
+        updatePrioritize(action,buildingId);
     });
 
     $('#btnAdd').click(function (event) {
         event.preventDefault();
         users += ($('#userName').val()+",");
-
     });
 
     $('#btnSave').click(function (event) {
@@ -236,8 +223,8 @@
 
     function updateBuilding(data, id) {
         $.ajax({
-            url: '${API}/user/'+id,
-            type: 'PUT',
+            url: '${API}/'+id+'/users',
+            type: 'POST',
             dataType: 'json',
             contentType:'application/json',
             data: JSON.stringify(data),
@@ -251,30 +238,13 @@
         });
     }
 
-    function updatePrioritize(userId,id) {
+    function updatePrioritize(action,id) {
         $.ajax({
-            url: '${API}/prioritize/'+id,
+            url: '${API}/'+id+'/priority?action='+action,
             type: 'PUT',
             dataType: 'json',
             contentType:'application/json',
-            data: JSON.stringify(userId),
-            success: function(res) {
-                window.location.href = "<c:url value='/admin/building/list?message=update_success'/>";
-            },
-            error: function(res) {
-                console.log(res);
-                window.location.href = "<c:url value='/admin/building/list?message=error_system'/>";
-            }
-        });
-    }
-
-    function deletePrioritize(data,id) {
-        $.ajax({
-            url: '${API}/delete/prioritize/'+id,
-            type: 'PUT',
-            dataType: 'json',
-            contentType:'application/json',
-            data: JSON.stringify(data),
+            data: JSON.stringify(),
             success: function(res) {
                 window.location.href = "<c:url value='/admin/building/list?message=update_success'/>";
             },

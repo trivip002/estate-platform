@@ -42,7 +42,7 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String avatarBase64;
     private List<UserDTO> users;
     private String user;
-    private int prioritize;
+    private int prioritize = 0;
     private List<UserDTO> userAssignment;
 
     public String getUser() {

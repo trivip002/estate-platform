@@ -17,11 +17,13 @@ public interface ICustomerService {
 
     CustomerDTO update(CustomerDTO customerDTO, long id);
 
+    CustomerDTO updateStatus(CustomerDTO customerDTO, long id);
+
     int getTotalItem(String searchValue);
 
     void deleteCustomer(long[] ids);
 
-    CustomerDTO insertCustomerUser(String users, long id);
+    void assignCustomerToStaff(String[] users, long id);
 
 }
    

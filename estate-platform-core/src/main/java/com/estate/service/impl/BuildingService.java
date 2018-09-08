@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -77,7 +78,6 @@ public class BuildingService implements IBuildingService {
                 }else{
                     if(isManager){ // manager
                         buildingsPage = buildingRepository.findAll(pageable);
-
                     }else {// user
                         buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
                     }
@@ -85,17 +85,13 @@ public class BuildingService implements IBuildingService {
             }
             for (BuildingEntity item : buildingsPage.getContent()) {
                 BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-                if(prioritize != 1){ // ko lấy danh sách ưu tiên, giữ trạng thái ưu tiên cho building
-                    List<BuildingEntity> buildingPrioritizes = buildingRepository.findByStaffsPrioritize_id(userId);
-                    for (BuildingEntity priority : buildingPrioritizes){
-                        if(item.getId() == priority.getId()){
-                            buildingDTO.setPrioritize(1);
-                        }
+                if(prioritize != 1){
+                    if (userRepository.existsByIdAndBuildingsPrioritize_Id(SecurityUtils.getPrincipal().getId(), item.getId())) {
+                        buildingDTO.setPrioritize(1);
                     }
                 }
+                buildingDTO.setDistrictName(districtRepository.findOneByCode(item.getDistrict()).getName());
                 buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrictName());
-                //lấy những user đã đc giao cho tòa nhà
-                buildingDTO.setUserAssignment(userService.getUsersByBuilding(buildingDTO.getId()));
                 result.add(buildingDTO);
             }
         return result;
@@ -205,41 +201,44 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public BuildingDTO insertStaffBuilding(String users, long id) {
-        BuildingEntity entity = buildingRepository.findOne(id);
-        users = users.substring(1,users.length()-1);
-        String [] arrayUser = users.split(",");
+    public void assignBuildingToStaff(String[] users, long id) {
+        BuildingEntity building = buildingRepository.findOne(id);
         List<UserEntity> userEntities = new ArrayList<>();
-        for (String s : arrayUser) {
-            UserEntity userEntity = userRepository.findOneByUserName(s);
-            userEntities.add(userEntity);
+        for (String item: users) {
+            userEntities.add(userRepository.findOneByUserName(item));
         }
-        entity.setStaffs(userEntities);
-        buildingRepository.save(entity);
-        return buildingConverter.convertToDto(entity);
+        building.setStaffs(userEntities);
+        buildingRepository.save(building);
     }
 
-
     @Override
-    public BuildingDTO updatePrioritize(long userId, long id,boolean update) {
-        BuildingEntity entity = buildingRepository.findOne(id);
-        UserEntity userEntity = userRepository.findOne(userId);
-        List<UserEntity> userEntitiesPrioritize = entity.getStaffsPrioritize();
-        if(update){
-            userEntitiesPrioritize.add(userEntity);
-        }else { // delete
-            int index = 0;
-            for (UserEntity item: userEntitiesPrioritize) {
-                    if(item.getUserName().equals(userEntity.getUserName())){
-                    userEntitiesPrioritize.remove(index);
+    public void updatePriority(String action,long id) {
+        BuildingEntity building = buildingRepository.findOne(id);
+        UserEntity user = userRepository.findOne(SecurityUtils.getPrincipal().getId());
+        if (action.equals("add")) {
+            building.setStaffsPrioritize(Stream.of(user).collect(Collectors.toList()));
+            user.setBuildingsPrioritize(Stream.of(building).collect(Collectors.toList()));
+
+        } else if (action.equals("remove")) {
+            List<UserEntity> listUsers = building.getStaffsPrioritize();
+            List<BuildingEntity> listBuildings = user.getBuildingsPrioritize();
+            for (UserEntity item: listUsers) {
+                if(item.getId() == user.getId()){
+                    listUsers.remove(item);
                     break;
                 }
-                index++;
             }
+            for (BuildingEntity item: listBuildings) {
+                if(item.getId() == id){
+                    listBuildings.remove(item);
+                    break;
+                }
+            }
+            building.setStaffsPrioritize(listUsers);
+            user.setBuildingsPrioritize(listBuildings);
         }
-        entity.setStaffsPrioritize(userEntitiesPrioritize);
-        buildingRepository.save(entity);
-        return buildingConverter.convertToDto(entity);
+        userRepository.save(user);
+        buildingRepository.save(building);
     }
 
 

@@ -44,7 +44,6 @@
                             <label class="col-sm-3 control-label no-padding-right"  > Email </label>
                             <div class="col-sm-9">
                                 <form:input path="email" id = "email"  cssClass="form-control"/>
-                                <p id="errorEmail"  hidden style="color: red;"> email đã tồn tại</p>
                             </div>
                         </div>
                         <br/>
@@ -55,19 +54,6 @@
                             </div>
                         </div>
                         <br/>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right"  >Ghi chú</label>
-                            <div class="col-sm-9">
-                                <form:textarea path="note" id = "need"  cssClass="form-control"/>
-                            </div>
-                        </div>
-                        <br/>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right"  >Tình trạng</label>
-                            <div class="col-sm-9">
-                                <form:textarea path="note" id = "need"  cssClass="form-control"/>
-                            </div>
-                        </div>
                         <br/>
                         <div class="clearfix form-actions">
                             <div class="col-md-offset-3 col-md-9">
@@ -87,7 +73,48 @@
     </div>
 </div>
 <script>
+    var check_valdidate;
     $(document).ready(function () {
+        check_valdidate = false;
+        $("#formEdit").validate({
+            rules: {
+                "name": { // <-- assign by field name and use quotes
+                    required: true,
+                },
+                "email": {
+                    required: true,  // <-- this rule was misspelled 'equired'
+                    email:true
+                },
+                "phoneNumber": {
+                    required: true,
+                },
+                "need": {
+                    required: true,  // <-- this rule was misspelled 'equired'
+                },
+
+            },
+            messages: {
+                "name":{
+                    required:"Hãy nhập họ tên"
+                },
+                "email": {
+                    required: "Hãy nhập email",
+                    email:"Email is not valid"
+                },
+                "phoneNumber": {
+                    required: "Hãy nhập số điện thoại",
+                },
+                "need": {
+                    required: "Hãy nhập nhu cầu",
+                },
+            },
+            submitHandler: function(form)
+            {
+                check_valdidate = true;
+            }
+
+        });
+
     });
     $('#btnAddOrUpdateCustomer').click(function (event) {
         var formData = $("#formEdit").serializeArray();
@@ -96,11 +123,15 @@
             dataArray[""+v.name+""] = v.value;
         });
         var id = $('#customerId').val();
-        if(id == ""){
-            addCustomer(dataArray)
-        }else{
-            updateCustomer(dataArray,id);
+        $('#formEdit').submit();
+        if(check_valdidate){
+            if(id == ""){
+                addCustomer(dataArray)
+            }else{
+                updateCustomer(dataArray,id);
+            }
         }
+
     });
 
     function addCustomer(data) {
