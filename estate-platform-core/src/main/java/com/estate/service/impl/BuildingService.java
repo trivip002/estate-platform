@@ -122,14 +122,18 @@ public class BuildingService implements IBuildingService {
     @Override
     public void changePriority(long id) {
         BuildingEntity buildingEntity = buildingRepository.findOne(id);
-        /*for(UserEntity item:buildingEntity.getUsers()){
+        /*for(UserEntity item: buildingEntity.getUsers()){
             if(item.getId() == SecurityUtils.getPrincipal().getId()){
                 buildingEntity.getUsers().remove(item);
                 buildingRepository.save(buildingEntity);
                 return;
             }
         }*/
-
+        if (buildingEntity.getUsers().stream().anyMatch(item -> item.getId().equals(SecurityUtils.getPrincipal().getId()))) {
+            buildingEntity.getUsers().remove(userRepository.findOne(SecurityUtils.getPrincipal().getId()));
+            buildingRepository.save(buildingEntity);
+            return;
+        }
         buildingEntity.getUsers().add(userRepository.findOne(SecurityUtils.getPrincipal().getId()));
         buildingRepository.save(buildingEntity);
     }
