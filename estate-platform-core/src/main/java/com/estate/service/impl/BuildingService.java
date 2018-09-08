@@ -2,7 +2,6 @@ package com.estate.service.impl;
 
 import com.estate.converter.BuildingConverter;
 import com.estate.dto.BuildingDTO;
-import com.estate.dto.UserDTO;
 import com.estate.entity.BuildingEntity;
 import com.estate.entity.UserEntity;
 import com.estate.enums.ETypes;
@@ -25,8 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.Query;
 import java.io.File;
+import java.security.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -125,7 +124,7 @@ public class BuildingService implements IBuildingService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         isManager = authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals("MANAGER"));
-    }
+}
 
 
     private void saveImage(BuildingDTO buildingDTO){
@@ -154,40 +153,18 @@ public class BuildingService implements IBuildingService {
     @Transactional
     public BuildingDTO  update(BuildingDTO updateBuilding, long id) {
         BuildingEntity oldBuilding = buildingRepository.findOne(id);
-        oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
-        oldBuilding.setCarParkingCharge(updateBuilding.getCarParkingCharge());
-        oldBuilding.setDistrict(updateBuilding.getDistrict());
-        oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
-        oldBuilding.setDeposit(updateBuilding.getDeposit());
-        oldBuilding.setDescription(updateBuilding.getDescription());
-        oldBuilding.setDirection(updateBuilding.getDirection());
-        oldBuilding.setElectricCharge(updateBuilding.getElectricCharge());
-        oldBuilding.setFloorArea(updateBuilding.getFloorArea());
-        oldBuilding.setExtraCharge(updateBuilding.getExtraCharge());
-        oldBuilding.setLink(updateBuilding.getLink());
-        oldBuilding.setManagerName(updateBuilding.getManagerName());
-        oldBuilding.setManagerPhone(updateBuilding.getManagerPhone());
-        oldBuilding.setServiceFee(updateBuilding.getServiceFee());
-        oldBuilding.setMap(updateBuilding.getMap());
-        oldBuilding.setMotorParkingCharge(updateBuilding.getMotorParkingCharge());
-        oldBuilding.setCarParkingCharge(updateBuilding.getCarParkingCharge());
-        oldBuilding.setWard(updateBuilding.getWard());
-        oldBuilding.setStreet(updateBuilding.getStreet());
-        oldBuilding.setStructure(updateBuilding.getStructure());
-        oldBuilding.setTimeForDecorate(updateBuilding.getTimeForDecorate());
-        oldBuilding.setType(updateBuilding.getType());
-        oldBuilding.setTimeForRent(updateBuilding.getTimeForRent());
-        oldBuilding.setName(updateBuilding.getName());
-        oldBuilding.setPayment(updateBuilding.getPayment());
-        oldBuilding.setRentArea(updateBuilding.getRentArea());
-        oldBuilding.setPrice(updateBuilding.getPrice());
-        oldBuilding.setTypes(StringUtils.join(updateBuilding.getTypeArrays(), ","));
-        if (StringUtils.isNotEmpty(updateBuilding.getImageName())) { // co thay doi hinh
-            saveImage(updateBuilding);
-            oldBuilding.setAvatar(updateBuilding.getAvatar());
-        }
-        oldBuilding = buildingRepository.save(oldBuilding);
-        return buildingConverter.convertToDto(oldBuilding);
+        updateBuilding.setId(id);
+        updateBuilding.setCreatedBy(oldBuilding.getCreatedBy());
+        updateBuilding.setCreatedDate((java.sql.Timestamp) oldBuilding.getCreatedDate());
+        updateBuilding.setTypes(StringUtils.join(updateBuilding.getTypeArrays(),","));
+        updateBuilding.setPrioritize(0);
+        saveImage(updateBuilding);
+        BuildingEntity buildingEntity = buildingConverter.convertToEntity(updateBuilding);
+        buildingEntity.setStaffs(oldBuilding.getStaffs());
+        buildingEntity.setStaffsPrioritize(oldBuilding.getStaffsPrioritize());
+        buildingRepository.save(buildingEntity);
+        return buildingConverter.convertToDto(buildingEntity);
+
     }
 
 

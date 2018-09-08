@@ -267,6 +267,8 @@
                             </div>
                         </div>
                         <form:hidden path="id" id="buildingId"/>
+                        <form:hidden path="createdBy" id="createdBy"/>
+                        <form:hidden path="createdDate" id="createdDate"/>
                     </form:form>
                 </div>
             </div>
@@ -341,7 +343,10 @@
         $.each(formData,function (i,v){
             if(v.name == 'typeArrays'){
                 typeArray.push(v.value);
-            }else{
+            }else if(v.name == 'createdBy' || v.name == 'createdDate'){
+                return;
+            }
+            else{
                 dataArray[""+v.name+""] = v.value;
             }
         });
@@ -361,6 +366,8 @@
                 if (id == "") {
                     addBuilding(dataArray);
                 } else {
+                    dataArray["createdBy"] = $("#createdBy").val();
+                    dataArray["createdDate"] = $("#createdDate").val();
                     updateBuilding(dataArray, id);
                 }
             }
