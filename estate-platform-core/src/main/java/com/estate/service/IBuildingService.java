@@ -14,7 +14,6 @@ public interface IBuildingService  {
     BuildingDTO findBuildingById(long id);
     void deleteBuilding(long[] ids);
     Map<String,String> getBuildingTypes();
-    BuildingDTO insertStaffBuilding(String users,long id);
-    BuildingDTO updatePrioritize(long userId,long id,boolean update);
-
+    void assignBuildingToStaff(String[] users,long id);
+    void updatePriority(String action,long id);
 }

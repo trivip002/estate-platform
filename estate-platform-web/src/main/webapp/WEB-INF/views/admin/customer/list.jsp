@@ -82,7 +82,6 @@
                                         <display:column headerClass="text-left" property="phoneNumber" title="Di động"/>
                                         <display:column headerClass="text-left" property="email" title="email"/>
                                         <display:column headerClass="text-left" property="need" title="Nhu cầu"/>
-                                        <display:column headerClass="textarea" property="process" title="Quá trình CSKH"/>
                                         <display:column headerClass="text-left" property="modifiedBy" title="Người nhập"/>
                                         <display:column headerClass="text-left" property="createdDate" title="Ngày nhập"/>
                                         <display:column headerClass="col-actions" title="Thao tác">
@@ -168,8 +167,8 @@
 
     function updateCustomer(data, id) {
         $.ajax({
-            url: '${API}/user/'+id,
-            type: 'PUT',
+            url: '${API}/'+id+'/users',
+            type: 'POST',
             dataType: 'json',
             contentType:'application/json',
             data: JSON.stringify(data),
@@ -194,17 +193,17 @@
     }
     function deleteCustomer(data) {
         $.ajax({
-            url: '${deleteAPI}',
+            url: '${API}',
             type: 'DELETE',
             contentType:'application/json',
             data: JSON.stringify(data),
             success: function(res) {
                 console.log(res);
-                window.location.href = "<c:url value='/admin/user/list?message=delete_success'/>";
+                window.location.href = "<c:url value='/admin/customer/list?message=delete_success'/>";
             },
             error: function(res) {
                 console.log(res);
-                window.location.href = "<c:url value='/admin/user/list?message=error_system'/>";
+                window.location.href = "<c:url value='/admin/customer/list?message=error_system'/>";
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.estate.dto;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String avatarBase64;
     private List<UserDTO> users;
     private String user;
-    private int prioritize;
+    private int prioritize = 0;
     private List<UserDTO> userAssignment;
 
     public String getUser() {
@@ -350,5 +351,9 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     public void setDistrictName(String districtName) {
         this.districtName = districtName;
     }
+
+
+
+
 
 }

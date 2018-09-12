@@ -95,9 +95,15 @@ public class CustomerService implements ICustomerService {
         oldCustomer.setDateMail(customerDTO.getDateMail());
         oldCustomer.setEmail(customerDTO.getEmail());
         oldCustomer.setNeed(customerDTO.getNeed());
-        oldCustomer.setNote(customerDTO.getNote());
         oldCustomer.setPhoneNumber(customerDTO.getPhoneNumber());
-        oldCustomer.setProcess(customerDTO.getProcess());
+        oldCustomer = customerRepository.save(oldCustomer);
+        return customerConverter.convertToDto(oldCustomer);
+    }
+
+    @Override
+    public CustomerDTO updateStatus(CustomerDTO customerDTO, long id) {
+        CustomerEntity oldCustomer = customerRepository.findOne(id);
+        oldCustomer.setNote(customerDTO.getNote());
         oldCustomer.setStatus(customerDTO.getStatus());
         oldCustomer = customerRepository.save(oldCustomer);
         return customerConverter.convertToDto(oldCustomer);
@@ -136,18 +142,14 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public CustomerDTO insertCustomerUser(String users, long id) {
-        CustomerEntity entity = customerRepository.findOne(id);
-        users = users.substring(1, users.length() - 1);
-        String[] arrayUser = users.split(",");
+    public void assignCustomerToStaff(String[] users, long id) {
+        CustomerEntity customer = customerRepository.findOne(id);
         List<UserEntity> userEntities = new ArrayList<>();
-        for (String s : arrayUser) {
-            UserEntity userEntity = userRepository.findOneByUserName(s);
-            userEntities.add(userEntity);
+        for (String item: users) {
+            userEntities.add(userRepository.findOneByUserName(item));
         }
-        entity.setUsers(userEntities);
-        customerRepository.save(entity);
-        return customerConverter.convertToDto(entity);
+        customer.setUsers(userEntities);
+        customerRepository.save(customer);
     }
 
 

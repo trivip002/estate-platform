@@ -36,13 +36,19 @@ public class CustomerAPI {
         return ResponseEntity.ok("success");
     }
 
-    @PutMapping("/user/{id}")
-    public ResponseEntity<CustomerDTO> updateCustomerUser(@RequestBody String users, @PathVariable("id") long id) {
-        return ResponseEntity.ok(customerService.insertCustomerUser(users, id));
+    @PostMapping("/{id}/users")
+    public ResponseEntity<Void> assignCustomerToStaff(@RequestBody String[] users, @PathVariable("id") long id) {
+        customerService.assignCustomerToStaff(users, id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/care_detail/{id}")
+    @PutMapping("/{id}/care_detail")
     public ResponseEntity<CustomerDTO> updateCareDetail(@RequestBody CareDetailDTO careDetailDTO, @PathVariable("id") long id) {
         return ResponseEntity.ok(careDetailService.insert(careDetailDTO, id));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<CustomerDTO> updateStatus(@RequestBody CustomerDTO customerDTO, @PathVariable("id") long id) {
+        return ResponseEntity.ok(customerService.updateStatus(customerDTO,id));
     }
 }

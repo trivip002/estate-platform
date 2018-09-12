@@ -35,19 +35,15 @@ public class BuildingAPI {
         return ResponseEntity.ok("success");
     }
 
-
-    @PutMapping("/user/{id}")
-    public ResponseEntity<BuildingDTO> updateBuildingStaffs(@RequestBody String users, @PathVariable("id") long id) {
-        return ResponseEntity.ok(buildingService.insertStaffBuilding(users, id));
+    @PostMapping("/{id}/users")
+    public ResponseEntity<Void> assignBuildingToStaff(@RequestBody String[] users, @PathVariable("id") long id) {
+        buildingService.assignBuildingToStaff(users, id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/prioritize/{id}")
-    public ResponseEntity<BuildingDTO> updatePrioritize(@RequestBody long userId, @PathVariable("id") long id) {
-        return ResponseEntity.ok(buildingService.updatePrioritize(userId, id,true));
-    }
-
-    @PutMapping("/delete/prioritize/{id}")
-    public ResponseEntity<BuildingDTO> deletePrioritize(@RequestBody long userId, @PathVariable("id") long id) {
-        return ResponseEntity.ok(buildingService.updatePrioritize(userId, id,false));
+    @PutMapping("/{id}/priority")
+    public ResponseEntity<Void> updatePriority(@RequestParam(value = "action", required = false) String action, @PathVariable("id") long id) {
+        buildingService.updatePriority(action, id);
+        return ResponseEntity.noContent().build();
     }
 }

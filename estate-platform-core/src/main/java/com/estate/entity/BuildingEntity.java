@@ -80,13 +80,13 @@ public class BuildingEntity extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "staff_building", joinColumns = {
-            @JoinColumn(name = "builiding_id", nullable = false) }, inverseJoinColumns = {
+            @JoinColumn(name = "building_id", nullable = false) }, inverseJoinColumns = {
             @JoinColumn(name = "staff_id", nullable = false) })
     private List<UserEntity> staffs = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinTable(name = "proritize_building", joinColumns = {
-            @JoinColumn(name = "builiding_id", nullable = false) }, inverseJoinColumns = {
+            @JoinColumn(name = "building_id", nullable = false) }, inverseJoinColumns = {
             @JoinColumn(name = "staff_id", nullable = false) })
     private List<UserEntity> staffsPrioritize = new ArrayList<>();
 

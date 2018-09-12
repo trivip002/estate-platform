@@ -39,7 +39,7 @@ public class UserEntity extends BaseEntity
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "staffs")
     private List<BuildingEntity> buildings;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "staffsPrioritize")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "staffsPrioritize", cascade = {CascadeType.REFRESH})
     private List<BuildingEntity> buildingsPrioritize;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")

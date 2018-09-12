@@ -2,7 +2,6 @@ package com.estate.service.impl;
 
 import com.estate.converter.BuildingConverter;
 import com.estate.dto.BuildingDTO;
-import com.estate.dto.UserDTO;
 import com.estate.entity.BuildingEntity;
 import com.estate.entity.UserEntity;
 import com.estate.enums.ETypes;
@@ -25,9 +24,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.Query;
 import java.io.File;
+import java.security.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -77,7 +77,6 @@ public class BuildingService implements IBuildingService {
                 }else{
                     if(isManager){ // manager
                         buildingsPage = buildingRepository.findAll(pageable);
-
                     }else {// user
                         buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
                     }
@@ -85,17 +84,13 @@ public class BuildingService implements IBuildingService {
             }
             for (BuildingEntity item : buildingsPage.getContent()) {
                 BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-                if(prioritize != 1){ // ko lấy danh sách ưu tiên, giữ trạng thái ưu tiên cho building
-                    List<BuildingEntity> buildingPrioritizes = buildingRepository.findByStaffsPrioritize_id(userId);
-                    for (BuildingEntity priority : buildingPrioritizes){
-                        if(item.getId() == priority.getId()){
-                            buildingDTO.setPrioritize(1);
-                        }
+                if(prioritize != 1){
+                    if (userRepository.existsByIdAndBuildingsPrioritize_Id(SecurityUtils.getPrincipal().getId(), item.getId())) {
+                        buildingDTO.setPrioritize(1);
                     }
                 }
+                buildingDTO.setDistrictName(districtRepository.findOneByCode(item.getDistrict()).getName());
                 buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrictName());
-                //lấy những user đã đc giao cho tòa nhà
-                buildingDTO.setUserAssignment(userService.getUsersByBuilding(buildingDTO.getId()));
                 result.add(buildingDTO);
             }
         return result;
@@ -129,7 +124,7 @@ public class BuildingService implements IBuildingService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         isManager = authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals("MANAGER"));
-    }
+}
 
 
     private void saveImage(BuildingDTO buildingDTO){
@@ -158,40 +153,18 @@ public class BuildingService implements IBuildingService {
     @Transactional
     public BuildingDTO  update(BuildingDTO updateBuilding, long id) {
         BuildingEntity oldBuilding = buildingRepository.findOne(id);
-        oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
-        oldBuilding.setCarParkingCharge(updateBuilding.getCarParkingCharge());
-        oldBuilding.setDistrict(updateBuilding.getDistrict());
-        oldBuilding.setAgencyCharge(updateBuilding.getAgencyCharge());
-        oldBuilding.setDeposit(updateBuilding.getDeposit());
-        oldBuilding.setDescription(updateBuilding.getDescription());
-        oldBuilding.setDirection(updateBuilding.getDirection());
-        oldBuilding.setElectricCharge(updateBuilding.getElectricCharge());
-        oldBuilding.setFloorArea(updateBuilding.getFloorArea());
-        oldBuilding.setExtraCharge(updateBuilding.getExtraCharge());
-        oldBuilding.setLink(updateBuilding.getLink());
-        oldBuilding.setManagerName(updateBuilding.getManagerName());
-        oldBuilding.setManagerPhone(updateBuilding.getManagerPhone());
-        oldBuilding.setServiceFee(updateBuilding.getServiceFee());
-        oldBuilding.setMap(updateBuilding.getMap());
-        oldBuilding.setMotorParkingCharge(updateBuilding.getMotorParkingCharge());
-        oldBuilding.setCarParkingCharge(updateBuilding.getCarParkingCharge());
-        oldBuilding.setWard(updateBuilding.getWard());
-        oldBuilding.setStreet(updateBuilding.getStreet());
-        oldBuilding.setStructure(updateBuilding.getStructure());
-        oldBuilding.setTimeForDecorate(updateBuilding.getTimeForDecorate());
-        oldBuilding.setType(updateBuilding.getType());
-        oldBuilding.setTimeForRent(updateBuilding.getTimeForRent());
-        oldBuilding.setName(updateBuilding.getName());
-        oldBuilding.setPayment(updateBuilding.getPayment());
-        oldBuilding.setRentArea(updateBuilding.getRentArea());
-        oldBuilding.setPrice(updateBuilding.getPrice());
-        oldBuilding.setTypes(StringUtils.join(updateBuilding.getTypeArrays(), ","));
-        if (StringUtils.isNotEmpty(updateBuilding.getImageName())) { // co thay doi hinh
-            saveImage(updateBuilding);
-            oldBuilding.setAvatar(updateBuilding.getAvatar());
-        }
-        oldBuilding = buildingRepository.save(oldBuilding);
-        return buildingConverter.convertToDto(oldBuilding);
+        updateBuilding.setId(id);
+        updateBuilding.setCreatedBy(oldBuilding.getCreatedBy());
+        updateBuilding.setCreatedDate((java.sql.Timestamp) oldBuilding.getCreatedDate());
+        updateBuilding.setTypes(StringUtils.join(updateBuilding.getTypeArrays(),","));
+        updateBuilding.setPrioritize(0);
+        saveImage(updateBuilding);
+        BuildingEntity buildingEntity = buildingConverter.convertToEntity(updateBuilding);
+        buildingEntity.setStaffs(oldBuilding.getStaffs());
+        buildingEntity.setStaffsPrioritize(oldBuilding.getStaffsPrioritize());
+        buildingRepository.save(buildingEntity);
+        return buildingConverter.convertToDto(buildingEntity);
+
     }
 
 
@@ -205,41 +178,44 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public BuildingDTO insertStaffBuilding(String users, long id) {
-        BuildingEntity entity = buildingRepository.findOne(id);
-        users = users.substring(1,users.length()-1);
-        String [] arrayUser = users.split(",");
+    public void assignBuildingToStaff(String[] users, long id) {
+        BuildingEntity building = buildingRepository.findOne(id);
         List<UserEntity> userEntities = new ArrayList<>();
-        for (String s : arrayUser) {
-            UserEntity userEntity = userRepository.findOneByUserName(s);
-            userEntities.add(userEntity);
+        for (String item: users) {
+            userEntities.add(userRepository.findOneByUserName(item));
         }
-        entity.setStaffs(userEntities);
-        buildingRepository.save(entity);
-        return buildingConverter.convertToDto(entity);
+        building.setStaffs(userEntities);
+        buildingRepository.save(building);
     }
 
-
     @Override
-    public BuildingDTO updatePrioritize(long userId, long id,boolean update) {
-        BuildingEntity entity = buildingRepository.findOne(id);
-        UserEntity userEntity = userRepository.findOne(userId);
-        List<UserEntity> userEntitiesPrioritize = entity.getStaffsPrioritize();
-        if(update){
-            userEntitiesPrioritize.add(userEntity);
-        }else { // delete
-            int index = 0;
-            for (UserEntity item: userEntitiesPrioritize) {
-                    if(item.getUserName().equals(userEntity.getUserName())){
-                    userEntitiesPrioritize.remove(index);
+    public void updatePriority(String action,long id) {
+        BuildingEntity building = buildingRepository.findOne(id);
+        UserEntity user = userRepository.findOne(SecurityUtils.getPrincipal().getId());
+        if (action.equals("add")) {
+            building.setStaffsPrioritize(Stream.of(user).collect(Collectors.toList()));
+            user.setBuildingsPrioritize(Stream.of(building).collect(Collectors.toList()));
+
+        } else if (action.equals("remove")) {
+            List<UserEntity> listUsers = building.getStaffsPrioritize();
+            List<BuildingEntity> listBuildings = user.getBuildingsPrioritize();
+            for (UserEntity item: listUsers) {
+                if(item.getId() == user.getId()){
+                    listUsers.remove(item);
                     break;
                 }
-                index++;
             }
+            for (BuildingEntity item: listBuildings) {
+                if(item.getId() == id){
+                    listBuildings.remove(item);
+                    break;
+                }
+            }
+            building.setStaffsPrioritize(listUsers);
+            user.setBuildingsPrioritize(listBuildings);
         }
-        entity.setStaffsPrioritize(userEntitiesPrioritize);
-        buildingRepository.save(entity);
-        return buildingConverter.convertToDto(entity);
+        userRepository.save(user);
+        buildingRepository.save(building);
     }
 
 

@@ -112,10 +112,10 @@
                                             <td class="success">Tình trạng: </td>
                                             <td class="success">
                                                 <div class="radio">
-                                                    <label><input type="radio" name="optradio" id="yes">Ký hợp đồng</label>
+                                                    <form:radiobutton path="status" value="1"/>Ký hợp đồng
                                                 </div>
                                                 <div class="radio">
-                                                    <label><input type="radio" name="optradio" id="no">Không ký hợp đồng</label>
+                                                    <form:radiobutton path="status" value="2"/>Không ký hợp đồng
                                                 </div>
                                             </td>
                                         </tr>
@@ -123,7 +123,7 @@
                                             <td class="success">Ghi chú: </td>
                                             <td class="success">
                                                 <div class="form-group">
-                                                    <textarea class="form-control rounded-0" id="note" rows="3"></textarea>
+                                                    <form:textarea path="note" id = "note"  cssClass="form-control"/>
                                                 </div>
                                             </td>
                                         </tr>
@@ -185,18 +185,18 @@
         event.preventDefault();
         var dataArray = {};
         var id = ${model.id};
-        if($('[name="yes"]').is(':checked')){
+        if ($("input[name='status'][value='1']").prop("checked")){
             dataArray["status"] = 1;
         }else {
             dataArray["status"] = 2;
         }
         dataArray["note"] = $('#note').val();
-        updateCustomer(dataArray,id);
+        updateStatus(dataArray,id);
     });
 
-    function updateCustomer(data, id) {
+    function updateStatus(data, id) {
         $.ajax({
-            url: '${formUrl}/'+id,
+            url: '${formUrl}/'+id+'/status',
             type: 'PUT',
             dataType: 'json',
             contentType:'application/json',
@@ -213,7 +213,7 @@
 
     function updateCareDetail(data, id) {
         $.ajax({
-            url: '${formUrl}/care_detail/'+id,
+            url: '${formUrl}/'+id+'/care_detail',
             type: 'PUT',
             dataType: 'json',
             contentType:'application/json',
