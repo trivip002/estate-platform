@@ -48,29 +48,153 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="widget-body">
+                                    <%--<div class="widget-body">
                                         <div class="widget-main">
                                             <div class="form-horizontal">
                                                 <div class="form-group">
-                                                    <label class="col-sm-2 control-label">Gía trị cần tìm:</label>
-                                                    <div class="col-sm-8">
+                                                    <div class="col-sm-6">
                                                         <div class="fg-line">
-                                                            <form:input path="searchValue" cssClass="form-control input-sm"/>
+                                                            <form:input path="name" cssClass="form-control input-sm"
+                                                                        placeholder="Tên tòa nhà"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="buildingArea"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.floorArea}"
+                                                                   placeholder="Diện tích sàn"/>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-sm-2 control-label"></label>
-                                                    <div class="col-sm-8">
-                                                        <button type="button" class="btn btn-sm btn-success" id="btnSearch">
-                                                            Tìm kiếm
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="district" id="district"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Quận hiện có"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="ward" id="ward"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Phường"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="street" id="street"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Đường"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="numberOfBasement"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.numberOfBasement}"
+                                                                   placeholder="Số tầng hầm" id="numberOfBasement"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="direction" id="direction"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Hướng"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="level" id="level"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Hạng"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="areaFrom"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.areaFrom}"
+                                                                   placeholder="Diện tích từ" id="areaFrom"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="areaTo"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.areaTo}"
+                                                                   placeholder="Diện tích đến" id="areaTo"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="costFrom"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.costFrom}"
+                                                                   placeholder="Gía thuê từ" id="costFrom"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="fg-line">
+                                                            <input type="number" name="costTo"
+                                                                   class="form-control input-sm"
+                                                                   value="${model.costTo}"
+                                                                   placeholder="Gía thuê đến" id="costTo"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="managerName" id="managerName"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Tên quản lý"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="fg-line">
+                                                            <form:input path="managerPhone" id="managerPhone"
+                                                                        cssClass="form-control input-sm"
+                                                                        placeholder="Điện thoại quản lý"/>
+                                                        </div>
+                                                    </div>
+                                                    <c:if test="${urlMapping != '/admin/building/assignment'}">
+                                                        <div class="col-sm-4">
+                                                            <div class="fg-line">
+                                                                <form:select path="staffName" id="staffName">
+                                                                    <form:option value=""
+                                                                                 label="--- Chọn nhân viên phụ trách ---"/>
+                                                                    <form:options items="${staffMaps}"/>
+                                                                </form:select>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <div class="fg-line">
+                                                            <form:checkboxes path="typeArrays" items="${mapTypes}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <button id="btnSearch" type="button"
+                                                                class="btn btn-sm btn-success">
+                                                            <spring:message code="label.search"/>
                                                             <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>--%>
+                                </div>
                                 </div>
                                 <div class="table-btn-controls">
                                     <div class="pull-right tableTools-container">

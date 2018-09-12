@@ -1,7 +1,5 @@
 package com.estate.entity;
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
