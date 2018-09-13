@@ -69,6 +69,14 @@ public class BuildingBuilder {
         return staffName;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
     public BuildingBuilder(Builder builder) {
         this.name = builder.name;
         this.district = builder.district;
@@ -85,14 +93,6 @@ public class BuildingBuilder {
         this.managerPhone = builder.managerPhone;
         this.typeArrays = builder.typeArrays;
         this.staffName = builder.staffName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDistrict() {
-        return district;
     }
 
     public static class Builder {

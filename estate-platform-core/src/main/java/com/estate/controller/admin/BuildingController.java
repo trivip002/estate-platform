@@ -50,11 +50,11 @@ public class BuildingController {
         List<BuildingDTO> buildings;
         if(prioritize != null){
             mav.addObject("prioritize",1);
-            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,1);
+            buildings = buildingService.getBuildingsByPrioritizeAndUser(model, pageable,1);
             model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),1));
         }
         else {
-            buildings = buildingService.getBuildingsByPrioritizeAndUser(model.getSearchValue(), pageable,0);
+            buildings = buildingService.getBuildingsByPrioritizeAndUser(model, pageable,0);
             model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),0));
         }
         model.setListResult(buildings);

@@ -21,7 +21,7 @@ public class DistrictService implements IDistrictService {
         Map<String, String> districts = new HashMap<>();
         List<DistrictEntity> entities = districtRepository.findAll();
         entities.forEach(item -> {
-            districts.put(item.getCode(), item.getName());
+            districts.put(item.getName(), item.getName());
         });
         return districts;
     }

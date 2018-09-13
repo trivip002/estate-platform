@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface BuildingRepositoryCustom {
     List<BuildingEntity> findAll(BuildingBuilder buildingBuilder, Pageable pageable);
+    Integer getTotalItems(BuildingBuilder buildingBuilder);
 }

@@ -180,7 +180,6 @@
                                                        <div class="col-sm-6">
                                                            <button id="btnSearch" type="button"
                                                                    class="btn btn-sm btn-success">
-                                                               <spring:message code="label.search"/>
                                                                <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110">Tìm kiếm</i>
                                                            </button>
                                                        </div>
