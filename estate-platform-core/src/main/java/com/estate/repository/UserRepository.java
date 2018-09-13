@@ -1,6 +1,7 @@
 package com.estate.repository;
 
 import com.estate.entity.BuildingEntity;
+import com.estate.entity.RoleEntity;
 import com.estate.entity.UserEntity;
 import org.jboss.logging.annotations.Param;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,UserRepo
     boolean existsByUserNameOrEmailAndIdIsNotIn(String userName, String email, long Id);
     List<UserEntity> findByBuildings_Id(long buildingId);
     boolean existsByIdAndBuildingsPrioritize_Id(long userId, long buildingId);
+    List<UserEntity> findByRoleList_id(long roleId);
 }

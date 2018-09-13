@@ -20,7 +20,11 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String direction;
     private String type;
     private String rentArea;
+    private String areaFrom;
+    private String areaTo;
     private String price;
+    private String priceFrom;
+    private String priceTo;
     private String serviceFee;
     private String motorParkingCharge;
     private String carParkingCharge;
@@ -45,6 +49,32 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String user;
     private int prioritize = 0;
     private List<UserDTO> userAssignment;
+    private String staffName;
+
+
+    public String getPriceFrom() {
+        return priceFrom;
+    }
+
+    public void setPriceFrom(String priceFrom) {
+        this.priceFrom = priceFrom;
+    }
+
+    public String getPriceTo() {
+        return priceTo;
+    }
+
+    public void setPriceTo(String priceTo) {
+        this.priceTo = priceTo;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
 
     public String getUser() {
         return user;
@@ -353,7 +383,20 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     }
 
 
+    public String getAreaFrom() {
+        return areaFrom;
+    }
 
+    public void setAreaFrom(String areaFrom) {
+        this.areaFrom = areaFrom;
+    }
 
+    public String getAreaTo() {
+        return areaTo;
+    }
+
+    public void setAreaTo(String areaTo) {
+        this.areaTo = areaTo;
+    }
 
 }

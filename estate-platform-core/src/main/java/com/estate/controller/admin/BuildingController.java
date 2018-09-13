@@ -58,8 +58,11 @@ public class BuildingController {
             model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),0));
         }
         model.setListResult(buildings);
+        model.setDistricts(districtService.getDistricts());
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);
+        mav.addObject(SystemConstant.MAP_TYPES, buildingService.getBuildingTypes());
+        mav.addObject(SystemConstant.MAP_USERS, userService.getUsers());
         return mav;
     }
 
@@ -76,7 +79,7 @@ public class BuildingController {
             mav.addObject(SystemConstant.MODEL, buildingDTO);
         }
         mav.addObject(SystemConstant.MAP_TYPES, buildingService.getBuildingTypes());
-        mav.addObject(SystemConstant.MAP_USERS, userService.getUsers());
+        //mav.addObject(SystemConstant.MAP_USERS, userService.getUsers());
         return mav;
     }
 

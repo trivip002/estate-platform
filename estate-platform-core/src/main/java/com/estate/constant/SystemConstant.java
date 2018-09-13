@@ -10,5 +10,5 @@ public class SystemConstant {
 	public static final String ALERT = "alert";
 	public static final String MESSAGE_RESPONSE = "messageResponse";
 	public static final String MAP_TYPES = "mapTypes";
-	public static final String MAP_USERS = "mapUsers";
+	public static final String MAP_USERS = "staffMaps";
 }

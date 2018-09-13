@@ -6,6 +6,7 @@ import com.estate.controller.utils.Md5Utils;
 import com.estate.converter.RoleConverter;
 import com.estate.converter.UserConverter;
 import com.estate.dto.UserDTO;
+import com.estate.entity.RoleEntity;
 import com.estate.entity.UserEntity;
 import com.estate.repository.RoleRepository;
 import com.estate.repository.UserRepository;
@@ -142,9 +143,9 @@ public class UserService implements IUserService {
     @Override
     public Map<String, String> getUsers() {
         Map<String, String> users = new HashMap<>();
-        List<UserEntity> entities = userRepository.findAll();
+        List<UserEntity> entities = userRepository.findByRoleList_id(2);
         entities.forEach(item -> {
-            users.put(item.getId().toString(), item.getUserName());
+            users.put(item.getId().toString(), item.getFullName());
         });
         return users;
     }
