@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
+
     @PersistenceContext
     private EntityManager entityManager;
 

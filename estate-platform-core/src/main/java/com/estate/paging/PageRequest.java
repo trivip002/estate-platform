@@ -1,6 +1,7 @@
 package com.estate.paging;
 
 public class PageRequest implements Pageable {
+
     private int page;
     private int maxPageItem;
 
