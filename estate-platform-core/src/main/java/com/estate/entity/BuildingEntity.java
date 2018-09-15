@@ -18,15 +18,15 @@ public class BuildingEntity extends BaseEntity {
     @Column
     private String structure;
     @Column
-    private int floorArea;
+    private Integer floorArea;
     @Column
     private String direction;
     @Column
     private String type;
     @Column
-    private int rentArea;
+    private Integer rentArea;
     @Column
-    private int price;
+    private Integer price;
     @Column
     private String serviceFee;
     @Column
@@ -130,14 +130,6 @@ public class BuildingEntity extends BaseEntity {
         this.structure = structure;
     }
 
-    public int getFloorArea() {
-        return floorArea;
-    }
-
-    public void setFloorArea(int floorArea) {
-        this.floorArea = floorArea;
-    }
-
     public String getDirection() {
         return direction;
     }
@@ -152,22 +144,6 @@ public class BuildingEntity extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public int getRentArea() {
-        return rentArea;
-    }
-
-    public void setRentArea(int rentArea) {
-        this.rentArea = rentArea;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public String getServiceFee() {
@@ -320,5 +296,29 @@ public class BuildingEntity extends BaseEntity {
 
     public void setTypes(String types) {
         this.types = types;
+    }
+
+    public Integer getFloorArea() {
+        return floorArea;
+    }
+
+    public void setFloorArea(Integer floorArea) {
+        this.floorArea = floorArea;
+    }
+
+    public Integer getRentArea() {
+        return rentArea;
+    }
+
+    public void setRentArea(Integer rentArea) {
+        this.rentArea = rentArea;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

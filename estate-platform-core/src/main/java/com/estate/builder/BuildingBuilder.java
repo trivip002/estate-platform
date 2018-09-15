@@ -5,13 +5,13 @@ public class BuildingBuilder {
     private String district;
     private String ward;
     private String street;
-    private int floorArea;
+    private Integer floorArea;
     private String direction;
     private String type;
-    private int areaFrom;
-    private int areaTo;
-    private int priceFrom;
-    private int priceTo;
+    private Integer areaFrom;
+    private Integer areaTo;
+    private Integer priceFrom;
+    private Integer priceTo;
     private String managerName;
     private String managerPhone;
     private String[] typeArrays = new String[]{};
@@ -25,32 +25,12 @@ public class BuildingBuilder {
         return street;
     }
 
-    public int getFloorArea() {
-        return floorArea;
-    }
-
     public String getDirection() {
         return direction;
     }
 
     public String getType() {
         return type;
-    }
-
-    public int getAreaFrom() {
-        return areaFrom;
-    }
-
-    public int getAreaTo() {
-        return areaTo;
-    }
-
-    public int getPriceFrom() {
-        return priceFrom;
-    }
-
-    public int getPriceTo() {
-        return priceTo;
     }
 
     public String getManagerName() {
@@ -77,6 +57,26 @@ public class BuildingBuilder {
         return district;
     }
 
+    public Integer getFloorArea() {
+        return floorArea;
+    }
+
+    public Integer getAreaFrom() {
+        return areaFrom;
+    }
+
+    public Integer getAreaTo() {
+        return areaTo;
+    }
+
+    public Integer getPriceFrom() {
+        return priceFrom;
+    }
+
+    public Integer getPriceTo() {
+        return priceTo;
+    }
+
     public BuildingBuilder(Builder builder) {
         this.name = builder.name;
         this.district = builder.district;
@@ -100,13 +100,13 @@ public class BuildingBuilder {
         private String district;
         private String ward;
         private String street;
-        private int floorArea;
+        private Integer floorArea;
         private String direction;
         private String type;
-        private int areaFrom;
-        private int areaTo;
-        private int priceFrom;
-        private int priceTo;
+        private Integer areaFrom;
+        private Integer areaTo;
+        private Integer priceFrom;
+        private Integer priceTo;
         private String managerName;
         private String managerPhone;
         private String[] typeArrays = new String[]{};
@@ -132,11 +132,6 @@ public class BuildingBuilder {
             return this;
         }
 
-        public Builder setFloorArea(int floorArea) {
-            this.floorArea = floorArea;
-            return this;
-        }
-
         public Builder setDirection(String direction) {
             this.direction = direction;
             return this;
@@ -144,26 +139,6 @@ public class BuildingBuilder {
 
         public Builder setType(String type) {
             this.type = type;
-            return this;
-        }
-
-        public Builder setAreaFrom(int areaFrom) {
-            this.areaFrom = areaFrom;
-            return this;
-        }
-
-        public Builder setAreaTo(int areaTo) {
-            this.areaTo = areaTo;
-            return this;
-        }
-
-        public Builder setPriceFrom(int priceFrom) {
-            this.priceFrom = priceFrom;
-            return this;
-        }
-
-        public Builder setPriceTo(int priceTo) {
-            this.priceTo = priceTo;
             return this;
         }
 
@@ -184,6 +159,31 @@ public class BuildingBuilder {
 
         public Builder setStaffName(String staffName) {
             this.staffName = staffName;
+            return this;
+        }
+
+        public Builder setFloorArea(Integer floorArea) {
+            this.floorArea = floorArea;
+            return this;
+        }
+
+        public Builder setAreaFrom(Integer areaFrom) {
+            this.areaFrom = areaFrom;
+            return this;
+        }
+
+        public Builder setAreaTo(Integer areaTo) {
+            this.areaTo = areaTo;
+            return this;
+        }
+
+        public Builder setPriceFrom(Integer priceFrom) {
+            this.priceFrom = priceFrom;
+            return this;
+        }
+
+        public Builder setPriceTo(Integer priceTo) {
+            this.priceTo = priceTo;
             return this;
         }
 

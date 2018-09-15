@@ -67,11 +67,11 @@ public class BuildingController {
         return mav;
     }
 
-    private List<BuildingDTO> getBuildingsAndTotalItem(int priority,BuildingDTO model,Pageable pageable){
-        if(model.getSearch()==1){ // có seaarch
+    private List<BuildingDTO> getBuildingsAndTotalItem(int priority, BuildingDTO model, Pageable pageable){
+        if(model.getSearch() == 1) { // có seaarch
             model.setTotalItems(buildingService.getTotalItemsSearch(model,priority));
             return buildingService.searchBuildingsByPrioritizeAndUser(model,priority);
-        }else{
+        } else {
             model.setTotalItems(buildingService.getTotalItems(priority));
             return buildingService.getBuildingsByPrioritizeAndUser(pageable,priority);
         }

@@ -14,7 +14,9 @@ import javax.persistence.Query;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
@@ -28,6 +30,9 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     public List<BuildingEntity> findAll(BuildingBuilder buildingBuilder, Pageable pageable) {
         StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be");
         sql.append(" WHERE 1=1 ");
+        if (StringUtils.isNotBlank(buildingBuilder.getStaffName())) {
+            sql.append(" JOIN be.staffs s ");
+        }
         sql = buildQuery(sql, buildingBuilder);
         Query query = entityManager.createQuery(sql.toString());
         query.setFirstResult(pageable.getOffset());
@@ -36,12 +41,15 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     }
 
     @Override
-    public Integer getTotalItems(BuildingBuilder buildingBuilder) {
-        StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be");
+    public Long getTotalItems(BuildingBuilder buildingBuilder) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM BuildingEntity AS be");
         sql.append(" WHERE 1=1 ");
+        if (StringUtils.isNotBlank(buildingBuilder.getStaffName())) {
+            sql.append(" JOIN be.staffs s ");
+        }
         sql = buildQuery(sql, buildingBuilder);
         Query query = entityManager.createQuery(sql.toString());
-        return query.getResultList().size();
+        return (Long) query.getSingleResult();
     }
 
     @Override
@@ -76,8 +84,34 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
                     if (StringUtils.isNotBlank(value)) {
                         sql.append("AND LOWER(be."+field.getName()+") LIKE '%"+value.toLowerCase()+"%'");
                     }
+                } else if (fieldType.equals("java.lang.Integer")) {
+                    Integer value = getValueField(field, buildingBuilder, Integer.class);
+                    if (value != null) {
+                        sql.append(" AND be."+field.getName()+") = "+value+"");
+                    }
                 }
             }
+        }
+        if (buildingBuilder.getAreaFrom() != null) {
+            sql.append(" AND be.rentArea >= "+buildingBuilder.getAreaFrom()+"");
+        }
+        if (buildingBuilder.getAreaTo() != null) {
+            sql.append(" AND be.rentArea <= "+buildingBuilder.getAreaTo()+"");
+        }
+        if (buildingBuilder.getPriceFrom() != null) {
+            sql.append(" AND be.price >= "+buildingBuilder.getPriceFrom()+"");
+        }
+        if (buildingBuilder.getPriceTo() != null) {
+            sql.append(" AND be.price <= "+buildingBuilder.getPriceTo()+"");
+        }
+        if (buildingBuilder.getTypeArrays().length > 0) {
+            sql.append(" AND (").append("be.types LIKE '%"+buildingBuilder.getTypeArrays()[0]+"%'");
+            Arrays.stream(buildingBuilder.getTypeArrays()).filter(item -> !item.equals(buildingBuilder.getTypeArrays()[0]))
+                    .forEach(item -> sql.append(" OR (be.types LIKE '%"+item+"%' "));
+            sql.append(")");
+        }
+        if (StringUtils.isNotBlank(buildingBuilder.getStaffName())) {
+            sql.append(" AND s.userName = '"+buildingBuilder.getStaffName()+"'");
         }
         return sql;
     }

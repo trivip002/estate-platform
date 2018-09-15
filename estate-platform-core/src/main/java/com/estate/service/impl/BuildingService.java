@@ -115,6 +115,10 @@ public class BuildingService implements IBuildingService {
         return new BuildingBuilder.Builder()
                 .setName(modelSearch.getName())
                 .setStreet(modelSearch.getStreet())
+                .setAreaFrom(modelSearch.getAreaFrom())
+                .setAreaTo(modelSearch.getAreaTo())
+                .setTypeArrays(modelSearch.getTypeArrays())
+                .setStaffName(modelSearch.getStaffName())
                 .build();
     }
 
@@ -144,14 +148,13 @@ public class BuildingService implements IBuildingService {
         getUserAndRole();
         if(prioritize == 1){
 
-        }else{
+        } else {
             if(isManager){
-                totalItem = (int) buildingRepository.getTotalItems(getBuildingBuilder(modelSearch));
+                totalItem = buildingRepository.getTotalItems(getBuildingBuilder(modelSearch)).intValue();
             }else {
                 totalItem = (int) buildingRepository.getTotalItemsByStaffs_id(getBuildingBuilder(modelSearch),userId);
             }
         }
-
         return totalItem;
     }
 
