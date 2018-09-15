@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBuildingService  {
-    List<BuildingDTO> getBuildingsByPrioritizeAndUser(BuildingDTO model, Pageable pageable,int prioritize);
-    int getTotalItems(String searchValue,int prioritize);
+    List<BuildingDTO> getBuildingsByPrioritizeAndUser(Pageable pageable,int prioritize);
+    List<BuildingDTO> searchBuildingsByPrioritizeAndUser(BuildingDTO model,int prioritize);
+    int getTotalItems(int prioritize);
+    int getTotalItemsSearch(BuildingDTO model,int prioritize);
     BuildingDTO insert(BuildingDTO buildingDTO);
     BuildingDTO update(BuildingDTO updateBuilding, long id);
     BuildingDTO findBuildingById(long id);

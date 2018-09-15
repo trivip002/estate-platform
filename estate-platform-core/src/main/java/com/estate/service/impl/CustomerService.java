@@ -1,12 +1,9 @@
 package com.estate.service.impl;
 
-import com.estate.converter.CareDetailConverter;
 import com.estate.converter.CustomerConverter;
-import com.estate.dto.CareDetailDTO;
+import com.estate.converter.CustomerServiceConverter;
 import com.estate.dto.CustomerDTO;
-import com.estate.entity.CareDetailEntity;
 import com.estate.entity.CustomerEntity;
-import com.estate.entity.RoleEntity;
 import com.estate.entity.UserEntity;
 import com.estate.repository.CustomerRepository;
 import com.estate.repository.UserRepository;
@@ -36,7 +33,7 @@ public class CustomerService implements ICustomerService {
     private CustomerConverter customerConverter;
 
     @Autowired
-    private CareDetailConverter careDetailConverter;
+    private CustomerServiceConverter customerServiceConverter;
 
     @Autowired
     private IRoleService roleService;

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ public class BuildingController {
     @Autowired
     private UserRepository userRepository;
 
+
+
     @RequestMapping(value = "/admin/building/list", method = RequestMethod.GET)
     public ModelAndView getBuildings(@RequestParam(value = "prioritize", required = false) Integer prioritize,
                                      @ModelAttribute(SystemConstant.MODEL) BuildingDTO model,
@@ -47,15 +50,13 @@ public class BuildingController {
         DisplayTagUtils.initSearchBean(request, model);
         model.setMaxPageItems(5);
         Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
-        List<BuildingDTO> buildings;
+        List<BuildingDTO> buildings = null ;
         if(prioritize != null){
             mav.addObject("prioritize",1);
-            buildings = buildingService.getBuildingsByPrioritizeAndUser(model, pageable,1);
-            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),1));
+            buildings = getBuildingsAndTotalItem(1,model,pageable);
         }
         else {
-            buildings = buildingService.getBuildingsByPrioritizeAndUser(model, pageable,0);
-            model.setTotalItems(buildingService.getTotalItems(model.getSearchValue(),0));
+             buildings= getBuildingsAndTotalItem(0,model,pageable);
         }
         model.setListResult(buildings);
         model.setDistricts(districtService.getDistricts());
@@ -66,6 +67,15 @@ public class BuildingController {
         return mav;
     }
 
+    private List<BuildingDTO> getBuildingsAndTotalItem(int priority,BuildingDTO model,Pageable pageable){
+        if(model.getSearch()==1){ // có seaarch
+            model.setTotalItems(buildingService.getTotalItemsSearch(model,priority));
+            return buildingService.searchBuildingsByPrioritizeAndUser(model,priority);
+        }else{
+            model.setTotalItems(buildingService.getTotalItems(priority));
+            return buildingService.getBuildingsByPrioritizeAndUser(pageable,priority);
+        }
+    }
 
     @RequestMapping(value = "/admin/building/edit", method = RequestMethod.GET)
     public ModelAndView getBuildingById(@RequestParam(value = "id", required = false) Long id, HttpServletRequest request) {
@@ -98,4 +108,6 @@ public class BuildingController {
             mav.addObject(SystemConstant.MESSAGE_RESPONSE, messageMap.get(SystemConstant.MESSAGE_RESPONSE));
         }
     }
+
+
 }

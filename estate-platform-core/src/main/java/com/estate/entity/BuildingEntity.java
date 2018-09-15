@@ -18,15 +18,15 @@ public class BuildingEntity extends BaseEntity {
     @Column
     private String structure;
     @Column
-    private String floorArea;
+    private int floorArea;
     @Column
     private String direction;
     @Column
     private String type;
     @Column
-    private String rentArea;
+    private int rentArea;
     @Column
-    private String price;
+    private int price;
     @Column
     private String serviceFee;
     @Column
@@ -130,11 +130,11 @@ public class BuildingEntity extends BaseEntity {
         this.structure = structure;
     }
 
-    public String getFloorArea() {
+    public int getFloorArea() {
         return floorArea;
     }
 
-    public void setFloorArea(String floorArea) {
+    public void setFloorArea(int floorArea) {
         this.floorArea = floorArea;
     }
 
@@ -154,19 +154,19 @@ public class BuildingEntity extends BaseEntity {
         this.type = type;
     }
 
-    public String getRentArea() {
+    public int getRentArea() {
         return rentArea;
     }
 
-    public void setRentArea(String rentArea) {
+    public void setRentArea(int rentArea) {
         this.rentArea = rentArea;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

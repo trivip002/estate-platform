@@ -178,7 +178,7 @@
         var id = ${model.id};
         dataArray["date"] = $('#date').val();
         dataArray["content"] = $('#content').val();
-        updateCareDetail(dataArray,id);
+        updateCustomerService(dataArray,id);
     });
 
     $('#btnStatus').click(function (event) {
@@ -211,9 +211,9 @@
         });
     }
 
-    function updateCareDetail(data, id) {
+    function updateCustomerService(data, id) {
         $.ajax({
-            url: '${formUrl}/'+id+'/care_detail',
+            url: '${formUrl}/'+id+'/customer_service',
             type: 'PUT',
             dataType: 'json',
             contentType:'application/json',

@@ -9,4 +9,6 @@ import java.util.List;
 public interface BuildingRepositoryCustom {
     List<BuildingEntity> findAll(BuildingBuilder buildingBuilder, Pageable pageable);
     Integer getTotalItems(BuildingBuilder buildingBuilder);
+    List<BuildingEntity> findByStaffs_id(BuildingBuilder buildingBuilder, Pageable pageable,long userId);
+    Integer getTotalItemsByStaffs_id(BuildingBuilder buildingBuilder, long userId);
 }

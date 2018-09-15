@@ -1,6 +1,5 @@
 package com.estate.service;
 
-import com.estate.dto.CareDetailDTO;
 import com.estate.dto.CustomerDTO;
 import org.springframework.data.domain.Pageable;
 

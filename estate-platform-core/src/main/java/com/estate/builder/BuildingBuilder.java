@@ -5,13 +5,13 @@ public class BuildingBuilder {
     private String district;
     private String ward;
     private String street;
-    private String floorArea;
+    private int floorArea;
     private String direction;
     private String type;
-    private String areaFrom;
-    private String areaTo;
-    private String priceFrom;
-    private String priceTo;
+    private int areaFrom;
+    private int areaTo;
+    private int priceFrom;
+    private int priceTo;
     private String managerName;
     private String managerPhone;
     private String[] typeArrays = new String[]{};
@@ -25,7 +25,7 @@ public class BuildingBuilder {
         return street;
     }
 
-    public String getFloorArea() {
+    public int getFloorArea() {
         return floorArea;
     }
 
@@ -37,19 +37,19 @@ public class BuildingBuilder {
         return type;
     }
 
-    public String getAreaFrom() {
+    public int getAreaFrom() {
         return areaFrom;
     }
 
-    public String getAreaTo() {
+    public int getAreaTo() {
         return areaTo;
     }
 
-    public String getPriceFrom() {
+    public int getPriceFrom() {
         return priceFrom;
     }
 
-    public String getPriceTo() {
+    public int getPriceTo() {
         return priceTo;
     }
 
@@ -100,13 +100,13 @@ public class BuildingBuilder {
         private String district;
         private String ward;
         private String street;
-        private String floorArea;
+        private int floorArea;
         private String direction;
         private String type;
-        private String areaFrom;
-        private String areaTo;
-        private String priceFrom;
-        private String priceTo;
+        private int areaFrom;
+        private int areaTo;
+        private int priceFrom;
+        private int priceTo;
         private String managerName;
         private String managerPhone;
         private String[] typeArrays = new String[]{};
@@ -132,7 +132,7 @@ public class BuildingBuilder {
             return this;
         }
 
-        public Builder setFloorArea(String floorArea) {
+        public Builder setFloorArea(int floorArea) {
             this.floorArea = floorArea;
             return this;
         }
@@ -147,22 +147,22 @@ public class BuildingBuilder {
             return this;
         }
 
-        public Builder setAreaFrom(String areaFrom) {
+        public Builder setAreaFrom(int areaFrom) {
             this.areaFrom = areaFrom;
             return this;
         }
 
-        public Builder setAreaTo(String areaTo) {
+        public Builder setAreaTo(int areaTo) {
             this.areaTo = areaTo;
             return this;
         }
 
-        public Builder setPriceFrom(String priceFrom) {
+        public Builder setPriceFrom(int priceFrom) {
             this.priceFrom = priceFrom;
             return this;
         }
 
-        public Builder setPriceTo(String priceTo) {
+        public Builder setPriceTo(int priceTo) {
             this.priceTo = priceTo;
             return this;
         }

@@ -1,6 +1,6 @@
 package com.estate.dto;
 
-public class CareDetailDTO extends AbstractDTO<CareDetailDTO> {
+public class CustomerServiceDTO extends AbstractDTO<CustomerServiceDTO> {
 
     private static final long serialVersionUID = 7370312437221324007L;
 

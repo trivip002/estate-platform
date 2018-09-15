@@ -61,7 +61,7 @@
                                         Vị trí
                                     </td>
                                     <td>
-                                        ${model.street},${model.ward},${model.districtName}
+                                        ${model.street},${model.ward},${model.district}
                                     </td>
                                 </tr>
 

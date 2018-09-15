@@ -14,7 +14,7 @@ public class CustomerDTO extends AbstractDTO {
     private int status;
     private String note;
     private List<UserDTO> users;
-    private List<CareDetailDTO> careDetail;
+    private List<CustomerServiceDTO> careDetail;
 
     public String getName() {
         return name;
@@ -90,11 +90,11 @@ public class CustomerDTO extends AbstractDTO {
 
 
 
-    public List<CareDetailDTO> getCareDetail() {
+    public List<CustomerServiceDTO> getCareDetail() {
         return careDetail;
     }
 
-    public void setCareDetail(List<CareDetailDTO> careDetail) {
+    public void setCareDetail(List<CustomerServiceDTO> careDetail) {
         this.careDetail = careDetail;
     }
 }

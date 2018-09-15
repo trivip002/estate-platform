@@ -67,66 +67,91 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
-    public List<BuildingDTO> getBuildingsByPrioritizeAndUser(BuildingDTO model, Pageable pageable,int prioritize) {
+    public List<BuildingDTO> getBuildingsByPrioritizeAndUser(Pageable pageable,int prioritize) {
         List<BuildingDTO> result = new ArrayList<>();
         Page<BuildingEntity> buildingsPage = null;
         getUserAndRole();
-            if (1==1) {
-                com.estate.paging.Pageable pageableCustom = new PageRequest(model.getPage(), model.getMaxPageItems());
-                List<BuildingEntity> buildingEntities = buildingRepository.findAll(getBuildingBuilder(model), pageableCustom);
-                return buildingEntities.stream().map(item -> buildingConverter.convertToDto(item)).collect(Collectors.toList());
-            } else {
-                if(prioritize == 1){
-                    buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
-                }else {
-                    if(isManager){ // manager
-                        buildingsPage = buildingRepository.findAll(pageable);
-                    }else {// user
-                        buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
-                    }
-                }
-                for (BuildingEntity item : buildingsPage.getContent()) {
-                    BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-                    if(prioritize != 1){
-                        if (userRepository.existsByIdAndBuildingsPrioritize_Id(SecurityUtils.getPrincipal().getId(), item.getId())) {
-                            buildingDTO.setPrioritize(1);
-                        }
-                    }
-                    buildingDTO.setDistrictName(districtRepository.findOneByCode(item.getDistrict()).getName());
-                    buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrictName());
-                    result.add(buildingDTO);
-                }
-                return result;
+        if(prioritize == 1){
+            buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
+        }else {
+            if(isManager){ // manager
+                buildingsPage = buildingRepository.findAll(pageable);
+            }else {// user
+                buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
             }
+        }
+        for (BuildingEntity item : buildingsPage.getContent()) {
+            BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
+            if(prioritize != 1){
+                if (userRepository.existsByIdAndBuildingsPrioritize_Id(SecurityUtils.getPrincipal().getId(), item.getId())) {
+                    buildingDTO.setPrioritize(1);
+                }
+            }
+            buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrict());
+            result.add(buildingDTO);
+        }
+        return result;
     }
 
-    private BuildingBuilder getBuildingBuilder(BuildingDTO model) {
+    @Override
+    public List<BuildingDTO> searchBuildingsByPrioritizeAndUser(BuildingDTO modelSearch, int prioritize) {
+        getUserAndRole();
+        com.estate.paging.Pageable pageableCustom = new PageRequest(modelSearch.getPage(), modelSearch.getMaxPageItems());
+        List<BuildingEntity> buildingEntities = null;
+        if(prioritize == 1){
+            //buildingEntities = buildingRepository.
+        }else {
+            if(isManager){
+                buildingEntities = buildingRepository.findAll(getBuildingBuilder(modelSearch), pageableCustom);
+            }else {//user
+                buildingEntities = buildingRepository.findByStaffs_id(getBuildingBuilder(modelSearch), pageableCustom,userId);
+            }
+        }
+
+        return buildingEntities.stream().map(item -> buildingConverter.convertToDto(item)).collect(Collectors.toList());
+    }
+
+    private BuildingBuilder getBuildingBuilder(BuildingDTO modelSearch) {
         return new BuildingBuilder.Builder()
-                .setName(model.getName())
-                .setStreet(model.getStreet())
+                .setName(modelSearch.getName())
+                .setStreet(modelSearch.getStreet())
                 .build();
     }
 
 
+
     @Override
-    public int getTotalItems(String searchValue,int prioritize) {
+    public int getTotalItems(int prioritize) {
         int totalItem = 0;
         getUserAndRole();
-        if (searchValue != null) {
-            //totalItem = (int) userRepository.countByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue) - totalItemDelete;
-        } else {
-            if(prioritize == 1){
-                totalItem =(int) buildingRepository.countByStaffsPrioritize_id(userId);
-            }
-            else{
-                if(isManager){ // manager
-                    totalItem = (int) buildingRepository.count();
+        if(prioritize == 1){
+            totalItem =(int) buildingRepository.countByStaffsPrioritize_id(userId);
+        }
+        else{
+            if(isManager){ // manager
+                totalItem = (int) buildingRepository.count();
 
-                }else {// user
-                    totalItem =(int) buildingRepository.countByStaffs_id(userId);
-                }
+            }else {// user
+                totalItem =(int) buildingRepository.countByStaffs_id(userId);
             }
         }
+        return totalItem;
+    }
+
+    @Override
+    public int getTotalItemsSearch(BuildingDTO modelSearch, int prioritize) {
+        int totalItem = 0;
+        getUserAndRole();
+        if(prioritize == 1){
+
+        }else{
+            if(isManager){
+                totalItem = (int) buildingRepository.getTotalItems(getBuildingBuilder(modelSearch));
+            }else {
+                totalItem = (int) buildingRepository.getTotalItemsByStaffs_id(getBuildingBuilder(modelSearch),userId);
+            }
+        }
+
         return totalItem;
     }
 
@@ -236,7 +261,6 @@ public class BuildingService implements IBuildingService {
         BuildingEntity entity = buildingRepository.findOne(id);
         BuildingDTO dto = buildingConverter.convertToDto(entity);
         dto.setDistrict(entity.getDistrict());
-        dto.setDistrictName(districtRepository.findOneByCode(entity.getDistrict()).getName());
         dto.setDistricts(districtService.getDistricts());
         return dto;
     }

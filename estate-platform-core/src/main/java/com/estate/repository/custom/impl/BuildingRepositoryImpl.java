@@ -44,6 +44,28 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
         return query.getResultList().size();
     }
 
+    @Override
+    public List<BuildingEntity> findByStaffs_id(BuildingBuilder buildingBuilder, Pageable pageable, long userId) {
+        StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be,staff_building AS sb");
+        sql.append(" WHERE 1=1 ");
+        sql = buildQuery(sql, buildingBuilder);
+        sql.append("AND be.id = sb.building_id AND sb.staff_id = '"+userId+"'");
+        Query query = entityManager.createQuery(sql.toString());
+        query.setFirstResult(pageable.getOffset());
+        query.setMaxResults(pageable.getLimit());
+        return query.getResultList();
+    }
+
+    @Override
+    public Integer getTotalItemsByStaffs_id(BuildingBuilder buildingBuilder,long userId) {
+        StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be,staff_building AS sb");
+        sql.append(" WHERE 1=1 ");
+        sql = buildQuery(sql, buildingBuilder);
+        sql.append("AND be.id = sb.building_id AND sb.staff_id = '"+userId+"'");
+        Query query = entityManager.createQuery(sql.toString());
+        return query.getResultList().size();
+}
+
     private StringBuilder buildQuery(StringBuilder sql, BuildingBuilder buildingBuilder) {
         Field[] fields = BuildingBuilder.class.getDeclaredFields();
         for (Field field: fields) {
@@ -57,7 +79,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
                 }
             }
         }
-        return null;
+        return sql;
     }
 
     private <T> T getValueField(Field field, BuildingBuilder buildingBuilder, Class<T> type) {

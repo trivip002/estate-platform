@@ -1,4 +1,4 @@
-set search_path to estatespringmvc03;
+set search_path to estate;
 
 insert into role(code,name) values('MANAGER','Quản trị hệ thống');
 insert into role(code,name) values('USER','người dùng');

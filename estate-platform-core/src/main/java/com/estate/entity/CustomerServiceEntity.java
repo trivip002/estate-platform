@@ -3,8 +3,8 @@ package com.estate.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "care_detail")
-public class CareDetailEntity extends BaseEntity{
+@Table(name = "customer_service")
+public class CustomerServiceEntity extends BaseEntity{
     private static final long serialVersionUID = -7507397014679549178L;
 
     @Column

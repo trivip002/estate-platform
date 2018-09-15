@@ -7,6 +7,6 @@
         <class>com.estate.entity.UserEntity</class>
         <class>com.estate.entity.RoleEntity</class>
         <class>com.estate.entity.CustomerEntity</class>
-        <class>com.estate.entity.CareDetailEntity</class>
+        <class>com.estate.entity.CustomerServiceEntity</class>
     </persistence-unit>
 </persistence>

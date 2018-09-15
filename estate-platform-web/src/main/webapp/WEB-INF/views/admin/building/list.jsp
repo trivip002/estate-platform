@@ -168,6 +168,7 @@
                                                                </div>
                                                            </div>
                                                        </c:if>
+                                                       <form:hidden path="search" id="searchValue" />
                                                    </div>
                                                    <div class="form-group">
                                                        <div class="col-sm-6">
@@ -316,6 +317,8 @@
     });
 
     $('#btnSearch').click(function () {
+        $('#searchValue').val(1);
+        ${model.search};
         $('#listForm').submit();
     });
 
@@ -335,6 +338,7 @@
     $('#btnSave').click(function (event) {
         event.preventDefault();
         //var id = $('#tableList.id')
+        var users = ["nguyenvana"];
         updateBuilding(users, 3);
     });
 

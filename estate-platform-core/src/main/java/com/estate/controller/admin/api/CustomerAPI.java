@@ -1,9 +1,9 @@
 package com.estate.controller.admin.api;
 
-import com.estate.dto.CareDetailDTO;
+import com.estate.dto.CustomerServiceDTO;
 import com.estate.dto.CustomerDTO;
-import com.estate.service.impl.CareDetailService;
 import com.estate.service.impl.CustomerService;
+import com.estate.service.impl.CustomerService_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class CustomerAPI {
     private CustomerService customerService;
 
     @Autowired
-    private CareDetailService careDetailService;
+    private CustomerService_Service customerService_service;
 
     @PostMapping
     public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO){
@@ -42,9 +42,9 @@ public class CustomerAPI {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/care_detail")
-    public ResponseEntity<CustomerDTO> updateCareDetail(@RequestBody CareDetailDTO careDetailDTO, @PathVariable("id") long id) {
-        return ResponseEntity.ok(careDetailService.insert(careDetailDTO, id));
+    @PutMapping("/{id}/customer_service")
+    public ResponseEntity<CustomerDTO> updateCareDetail(@RequestBody CustomerServiceDTO customerServiceDTO, @PathVariable("id") long id) {
+        return ResponseEntity.ok(customerService_service.insert(customerServiceDTO, id));
     }
 
     @PutMapping("/{id}/status")

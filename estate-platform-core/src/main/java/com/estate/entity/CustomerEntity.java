@@ -31,14 +31,14 @@ public class CustomerEntity extends BaseEntity{
 
 
     @OneToMany(mappedBy="customer", fetch = FetchType.EAGER)
-    private List<CareDetailEntity> careDetail;
+    private List<CustomerServiceEntity> customerService;
 
-    public List<CareDetailEntity> getCareDetail() {
-        return careDetail;
+    public List<CustomerServiceEntity> getCareDetail() {
+        return customerService;
     }
 
-    public void setCareDetail(List<CareDetailEntity> careDetail) {
-        this.careDetail = careDetail;
+    public void setCareDetail(List<CustomerServiceEntity> careDetail) {
+        this.customerService = careDetail;
     }
 
     public String getName() {
