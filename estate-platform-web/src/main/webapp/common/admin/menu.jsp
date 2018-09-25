@@ -72,8 +72,17 @@
                     </a>
                     <b class="arrow"></b>
                 </li>
+                <security:authorize access="hasRole('USER')">
+                    <li class="">
+                        <a href='<c:url value="/admin/building/list/assignment"/>'>
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            Danh sách tòa nhà phụ trách
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                </security:authorize>
                 <li class="">
-                    <a href='<c:url value="/admin/building/list?prioritize=1"/>'>
+                    <a href='<c:url value="/admin/building/list-priority"/>'>
                         <i class="menu-icon fa fa-caret-right"></i>
                         Danh sách tòa nhà ưu tiên
                     </a>

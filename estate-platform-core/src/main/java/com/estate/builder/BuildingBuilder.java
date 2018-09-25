@@ -16,6 +16,16 @@ public class BuildingBuilder {
     private String managerPhone;
     private String[] typeArrays = new String[]{};
     private String staffName;
+    private Long userId;
+
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getWard() {
         return ward;
@@ -93,6 +103,7 @@ public class BuildingBuilder {
         this.managerPhone = builder.managerPhone;
         this.typeArrays = builder.typeArrays;
         this.staffName = builder.staffName;
+        this.userId = builder.userId;
     }
 
     public static class Builder {
@@ -111,6 +122,14 @@ public class BuildingBuilder {
         private String managerPhone;
         private String[] typeArrays = new String[]{};
         private String staffName;
+        private Long userId;
+
+
+
+        public Builder setUserId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
 
         public Builder setName(String name) {
             this.name = name;

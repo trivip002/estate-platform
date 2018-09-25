@@ -7,8 +7,6 @@ import com.estate.paging.Pageable;
 import java.util.List;
 
 public interface BuildingRepositoryCustom {
-    List<BuildingEntity> findAll(BuildingBuilder buildingBuilder, Pageable pageable);
-    Long getTotalItems(BuildingBuilder buildingBuilder);
-    List<BuildingEntity> findByStaffs_id(BuildingBuilder buildingBuilder, Pageable pageable,long userId);
-    Integer getTotalItemsByStaffs_id(BuildingBuilder buildingBuilder, long userId);
+    List<?> findAll(BuildingBuilder buildingBuilder, Pageable pageable,boolean priority);
+    Long getTotalItems(BuildingBuilder buildingBuilder,boolean priority);
 }

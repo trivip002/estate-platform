@@ -141,11 +141,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Map<String, String> getUsers() {
+    public Map<String, String> getStaffs() {
         Map<String, String> users = new HashMap<>();
+        //user
         List<UserEntity> entities = userRepository.findByRoleList_id(2);
         entities.forEach(item -> {
-            users.put(item.getId().toString(), item.getFullName());
+            users.put(item.getUserName(), item.getFullName());
         });
         return users;
     }

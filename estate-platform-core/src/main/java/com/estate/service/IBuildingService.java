@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBuildingService  {
-    List<BuildingDTO> getBuildingsByPrioritizeAndUser(Pageable pageable,int prioritize);
-    List<BuildingDTO> searchBuildingsByPrioritizeAndUser(BuildingDTO model,int prioritize);
-    int getTotalItems(int prioritize);
-    int getTotalItemsSearch(BuildingDTO model,int prioritize);
+    List<BuildingDTO> searchBuildingsAssignment(BuildingDTO model,boolean isAssignment);
+    List<BuildingDTO> searchBuildingsByPriority(BuildingDTO model);
+    int getTotalItemsAssignment(BuildingDTO model,boolean isAssignment);
+    int getTotalItemsPriority(BuildingDTO model);
     BuildingDTO insert(BuildingDTO buildingDTO);
     BuildingDTO update(BuildingDTO updateBuilding, long id);
     BuildingDTO findBuildingById(long id);

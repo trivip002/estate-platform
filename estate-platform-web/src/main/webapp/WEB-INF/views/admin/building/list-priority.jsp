@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Danh sách tất cả tòa nhà</title>
+    <title>Danh sách tòa nhà ưu tiên</title>
 </head>
 <body>
 <div class="main-content">
@@ -63,6 +63,7 @@
                                                     <div class="fg-line">
                                                         <input type="number" name="floorArea"
                                                                class="form-control input-sm"
+                                                               value="${model.floorArea}"
                                                                placeholder="Diện tích sàn"/>
                                                     </div>
                                                 </div>
@@ -112,6 +113,7 @@
                                                     <div class="fg-line">
                                                         <input type="number" name="areaFrom"
                                                                class="form-control input-sm"
+                                                               value="${model.areaFrom}"
                                                                placeholder="Diện tích từ" id="areaFrom"/>
                                                     </div>
                                                 </div>
@@ -119,6 +121,7 @@
                                                     <div class="fg-line">
                                                         <input type="number" name="areaTo"
                                                                class="form-control input-sm"
+                                                               value="${model.areaTo}"
                                                                placeholder="Diện tích đến" id="areaTo"/>
                                                     </div>
                                                 </div>
@@ -126,6 +129,7 @@
                                                     <div class="fg-line">
                                                         <input type="number" name="costFrom"
                                                                class="form-control input-sm"
+                                                               value="${model.priceFrom}"
                                                                placeholder="Gía thuê từ" id="costFrom"/>
                                                     </div>
                                                 </div>
@@ -133,6 +137,7 @@
                                                     <div class="fg-line">
                                                         <input type="number" name="costTo"
                                                                class="form-control input-sm"
+                                                               value="${model.priceTo}"
                                                                placeholder="Gía thuê đến" id="costTo"/>
                                                     </div>
                                                 </div>
@@ -184,28 +189,6 @@
                                 </div>
                             </div>
                         </div>
-                        <security:authorize access="hasRole('MANAGER')">
-                            <div class="table-btn-controls">
-                                <div class="pull-right tableTools-container">
-                                    <div class="dt-buttons btn-overlap btn-group">
-
-                                        <a flag="info" class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
-                                           data-toggle="tooltip" title="Thêm tòa nhà mới" href='<c:url value="/admin/building/edit"/>'>
-                                                        <span>
-                                                        <i class="fa fa-plus-circle bigger-110 purple"></i>
-                                                    </span>
-                                        </a>
-
-                                        <button id="btnDelete" type="button" class="dt-button buttons-html5 btn btn-white btn-primary btn-bold" disabled
-                                                data-toggle="tooltip" title="Xóa tòa nhà" onclick="warningBeforeDelete()">
-                                                        <span>
-                                                        <i class="fa fa-trash-o bigger-110 pink"></i>
-                                                        </span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </security:authorize>
                     </div>
                 </div>
                 <div class="row">
@@ -231,22 +214,6 @@
                                 <display:column headerClass="text-left" property="name" title="Diện tích trống"/>
                                 <display:column headerClass="text-left" property="price" title="Giá thuê"/>
                                 <display:column headerClass="text-left" property="agencyCharge" title="Phí môi giới"/>
-                                <security:authorize access="hasRole('MANAGER')">
-                                    <display:column headerClass="" title="HOT">
-                                            <c:choose>
-                                                <c:when test="${tableList.prioritize == 1}">
-                                                    <a href="#" buildingId="${tableList.id}" class="btnPriority" action="remove">
-                                                        <span class="glyphicon glyphicon-ok"></span>
-                                                    </a>
-                                                </c:when>
-                                                <c:when test="${tableList.prioritize == 0}">
-                                                    <a href="#" buildingId="${tableList.id}" class="btnPriority" action="add">
-                                                        <span class="glyphicon glyphicon-plus"></span>
-                                                    </a>
-                                                </c:when>
-                                            </c:choose>
-                                    </display:column>
-                                </security:authorize>
                                 <display:column headerClass="col-actions" title="Thao tác">
                                     <security:authorize access="hasRole('MANAGER')">
                                         <a class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip"
@@ -321,12 +288,6 @@
     });
 
 
-    $('.btnPriority').click(function (event) {
-        event.preventDefault();
-        buildingId = $(this).attr("buildingId");
-        action = $(this).attr("action");
-        updatePrioritize(action,buildingId);
-    });
 
     $('#btnAdd').click(function (event) {
         event.preventDefault();
@@ -336,8 +297,8 @@
     $('#btnSave').click(function (event) {
         event.preventDefault();
         //var id = $('#tableList.id')
-        var users = ["nguyenvanb"];
-        updateBuilding(users, 5);
+        var users = ["nguyenvana"];
+        updateBuilding(users, 3);
     });
 
     function updateBuilding(data, id) {
@@ -357,48 +318,7 @@
         });
     }
 
-    function updatePrioritize(action,id) {
-        $.ajax({
-            url: '${API}/'+id+'/priority?action='+action,
-            type: 'PUT',
-            dataType: 'json',
-            contentType:'application/json',
-            data: JSON.stringify(),
-            success: function(res) {
-                window.location.href = "<c:url value='/admin/building/list?message=update_success'/>";
-            },
-            error: function(res) {
-                console.log(res);
-                window.location.href = "<c:url value='/admin/building/list?message=error_system'/>";
-            }
-        });
-    }
 
-    function deleteBuilding(data) {
-        $.ajax({
-            url: '${API}',
-            type: 'DELETE',
-            contentType:'application/json',
-            data: JSON.stringify(data),
-            success: function(res) {
-                window.location.href = "<c:url value='/admin/building/list?message=delete_success'/>";
-            },
-            error: function(res) {
-                console.log(res);
-                window.location.href = "<c:url value='/admin/building/list?message=error_system'/>";
-            }
-        });
-    }
-
-    function warningBeforeDelete() {
-        showAlertBeforeDelete(function () {
-            event.preventDefault();
-            var dataArray = $(' tbody input[type=checkbox]:checked').map(function () {
-                return $(this).val();
-            }).get();
-            deleteBuilding(dataArray);
-        });
-    }
 </script>
 </body>
 </html>

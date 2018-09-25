@@ -40,42 +40,57 @@ public class BuildingController {
     @Autowired
     private UserRepository userRepository;
 
-
-
     @RequestMapping(value = "/admin/building/list", method = RequestMethod.GET)
-    public ModelAndView getBuildings(@RequestParam(value = "prioritize", required = false) Integer prioritize,
-                                     @ModelAttribute(SystemConstant.MODEL) BuildingDTO model,
+    public ModelAndView getBuildings(@ModelAttribute(SystemConstant.MODEL) BuildingDTO model,
                                      HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/building/list");
         DisplayTagUtils.initSearchBean(request, model);
         model.setMaxPageItems(5);
-        Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
-        List<BuildingDTO> buildings = null ;
-        if(prioritize != null){
-            mav.addObject("prioritize",1);
-            buildings = getBuildingsAndTotalItem(1,model,pageable);
-        }
-        else {
-             buildings= getBuildingsAndTotalItem(0,model,pageable);
-        }
+        List<BuildingDTO> buildings = buildingService.searchBuildingsAssignment(model,false);
+        model.setTotalItems(buildingService.getTotalItemsAssignment(model,false));
         model.setListResult(buildings);
         model.setDistricts(districtService.getDistricts());
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);
         mav.addObject(SystemConstant.MAP_TYPES, buildingService.getBuildingTypes());
-        mav.addObject(SystemConstant.MAP_USERS, userService.getUsers());
+        mav.addObject(SystemConstant.MAP_USERS, userService.getStaffs());
         return mav;
     }
 
-    private List<BuildingDTO> getBuildingsAndTotalItem(int priority, BuildingDTO model, Pageable pageable){
-        if(model.getSearch() == 1) { // có seaarch
-            model.setTotalItems(buildingService.getTotalItemsSearch(model,priority));
-            return buildingService.searchBuildingsByPrioritizeAndUser(model,priority);
-        } else {
-            model.setTotalItems(buildingService.getTotalItems(priority));
-            return buildingService.getBuildingsByPrioritizeAndUser(pageable,priority);
-        }
+    @RequestMapping(value = "/admin/building/list-priority", method = RequestMethod.GET)
+    public ModelAndView getBuildingsPriority(@ModelAttribute(SystemConstant.MODEL) BuildingDTO model,
+                                     HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("admin/building/list-priority");
+        DisplayTagUtils.initSearchBean(request, model);
+        model.setMaxPageItems(5);
+        List<BuildingDTO> buildings = buildingService.searchBuildingsByPriority(model) ;
+        model.setTotalItems(buildingService.getTotalItemsPriority(model));
+        model.setListResult(buildings);
+        model.setDistricts(districtService.getDistricts());
+        initMessageResponse(mav, request);
+        mav.addObject(SystemConstant.MODEL, model);
+        mav.addObject(SystemConstant.MAP_TYPES, buildingService.getBuildingTypes());
+        mav.addObject(SystemConstant.MAP_USERS, userService.getStaffs());
+        return mav;
     }
+
+    @RequestMapping(value = "/admin/building/list/assignment", method = RequestMethod.GET)
+    public ModelAndView getBuildingsAssignment(@ModelAttribute(SystemConstant.MODEL) BuildingDTO model,
+                                     HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("admin/building/list-assignment");
+        DisplayTagUtils.initSearchBean(request, model);
+        model.setMaxPageItems(5);
+        List<BuildingDTO> buildings = buildingService.searchBuildingsAssignment(model,true);
+        model.setTotalItems(buildingService.getTotalItemsAssignment(model,true));
+        model.setListResult(buildings);
+        model.setDistricts(districtService.getDistricts());
+        initMessageResponse(mav, request);
+        mav.addObject(SystemConstant.MODEL, model);
+        mav.addObject(SystemConstant.MAP_TYPES, buildingService.getBuildingTypes());
+        mav.addObject(SystemConstant.MAP_USERS, userService.getStaffs());
+        return mav;
+    }
+
 
     @RequestMapping(value = "/admin/building/edit", method = RequestMethod.GET)
     public ModelAndView getBuildingById(@RequestParam(value = "id", required = false) Long id, HttpServletRequest request) {

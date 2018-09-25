@@ -67,103 +67,109 @@ public class BuildingService implements IBuildingService {
 
 
     @Override
-    public List<BuildingDTO> getBuildingsByPrioritizeAndUser(Pageable pageable,int prioritize) {
-        List<BuildingDTO> result = new ArrayList<>();
-        Page<BuildingEntity> buildingsPage = null;
+    public List<BuildingDTO> searchBuildingsAssignment(BuildingDTO modelSearch, boolean isAssignment) {
         getUserAndRole();
-        if(prioritize == 1){
-            buildingsPage = buildingRepository.findByStaffsPrioritize_id(pageable,userId);
-        }else {
-            if(isManager){ // manager
-                buildingsPage = buildingRepository.findAll(pageable);
-            }else {// user
-                buildingsPage = buildingRepository.findByStaffs_id(pageable,userId);
-            }
+        com.estate.paging.Pageable pageableCustom = new PageRequest(modelSearch.getPage(), modelSearch.getMaxPageItems());
+        List<?> buildingEntities = null;
+        List<BuildingDTO> result = new ArrayList<>();
+        if(!isManager && isAssignment) {
+            modelSearch.setStaffName(userRepository.findOne(userId).getUserName());
         }
-        for (BuildingEntity item : buildingsPage.getContent()) {
-            BuildingDTO buildingDTO = buildingConverter.convertToDto(item);
-            if(prioritize != 1){
-                if (userRepository.existsByIdAndBuildingsPrioritize_Id(SecurityUtils.getPrincipal().getId(), item.getId())) {
-                    buildingDTO.setPrioritize(1);
-                }
+        //ko tính ưu tiên
+        buildingEntities = buildingRepository.findAll(getBuildingBuilder(modelSearch), pageableCustom,false);
+        //
+        for (Object item : buildingEntities) {
+            BuildingEntity buildingEntity = new BuildingEntity();
+            try {
+                buildingEntity = (BuildingEntity)item;
+            }catch (Exception e){
+                buildingEntity = (BuildingEntity)((Object[])item)[0];
             }
+            BuildingDTO buildingDTO = buildingConverter.convertToDto(buildingEntity);
+            if (userRepository.existsByIdAndBuildingsPrioritize_Id(SecurityUtils.getPrincipal().getId(), buildingEntity.getId())) {
+                buildingDTO.setPrioritize(1);
+            }
+            buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrict());
+            result.add(buildingDTO);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<BuildingDTO> searchBuildingsByPriority(BuildingDTO modelSearch) {
+        getUserAndRole();
+        com.estate.paging.Pageable pageableCustom = new PageRequest(modelSearch.getPage(), modelSearch.getMaxPageItems());
+        List<?> buildingEntities = null;
+        List<BuildingDTO> result = new ArrayList<>();
+        modelSearch.setUserId(userId);
+        //tính ưu tiên
+        buildingEntities = buildingRepository.findAll(getBuildingBuilder(modelSearch), pageableCustom,true);
+        //
+        for (Object item : buildingEntities) {
+            BuildingEntity buildingEntity = new BuildingEntity();
+            try {
+                buildingEntity = (BuildingEntity)item;
+            }catch (Exception e){
+                buildingEntity = (BuildingEntity)((Object[])item)[0];
+            }
+            BuildingDTO buildingDTO = buildingConverter.convertToDto(buildingEntity);
             buildingDTO.setAddress(buildingDTO.getStreet()+","+buildingDTO.getWard()+","+buildingDTO.getDistrict());
             result.add(buildingDTO);
         }
         return result;
     }
 
-    @Override
-    public List<BuildingDTO> searchBuildingsByPrioritizeAndUser(BuildingDTO modelSearch, int prioritize) {
-        getUserAndRole();
-        com.estate.paging.Pageable pageableCustom = new PageRequest(modelSearch.getPage(), modelSearch.getMaxPageItems());
-        List<BuildingEntity> buildingEntities = null;
-        if(prioritize == 1){
-            //buildingEntities = buildingRepository.
-        }else {
-            if(isManager){
-                buildingEntities = buildingRepository.findAll(getBuildingBuilder(modelSearch), pageableCustom);
-            }else {//user
-                buildingEntities = buildingRepository.findByStaffs_id(getBuildingBuilder(modelSearch), pageableCustom,userId);
-            }
-        }
-
-        return buildingEntities.stream().map(item -> buildingConverter.convertToDto(item)).collect(Collectors.toList());
-    }
-
     private BuildingBuilder getBuildingBuilder(BuildingDTO modelSearch) {
         return new BuildingBuilder.Builder()
                 .setName(modelSearch.getName())
+                .setDistrict(modelSearch.getDistrict())
+                .setWard(modelSearch.getWard())
                 .setStreet(modelSearch.getStreet())
+                .setFloorArea(modelSearch.getFloorArea())
+                .setDirection(modelSearch.getDirection())
+                .setType(modelSearch.getType())
                 .setAreaFrom(modelSearch.getAreaFrom())
                 .setAreaTo(modelSearch.getAreaTo())
+                .setPriceFrom(modelSearch.getPriceFrom())
+                .setPriceTo(modelSearch.getPriceTo())
+                .setManagerName(modelSearch.getManagerName())
+                .setManagerPhone(modelSearch.getManagerPhone())
                 .setTypeArrays(modelSearch.getTypeArrays())
                 .setStaffName(modelSearch.getStaffName())
+                .setUserId(modelSearch.getUserId())
                 .build();
     }
 
 
 
     @Override
-    public int getTotalItems(int prioritize) {
+    public int getTotalItemsAssignment(BuildingDTO modelSearch,boolean isAssignment) {
         int totalItem = 0;
         getUserAndRole();
-        if(prioritize == 1){
-            totalItem =(int) buildingRepository.countByStaffsPrioritize_id(userId);
+        if(!isManager && isAssignment){
+            modelSearch.setStaffName(userRepository.findOne(userId).getUserName());
         }
-        else{
-            if(isManager){ // manager
-                totalItem = (int) buildingRepository.count();
-
-            }else {// user
-                totalItem =(int) buildingRepository.countByStaffs_id(userId);
-            }
-        }
+        totalItem = buildingRepository.getTotalItems(getBuildingBuilder(modelSearch),false).intValue();
         return totalItem;
     }
 
     @Override
-    public int getTotalItemsSearch(BuildingDTO modelSearch, int prioritize) {
+    public int getTotalItemsPriority(BuildingDTO modelSearch) {
         int totalItem = 0;
         getUserAndRole();
-        if(prioritize == 1){
-
-        } else {
-            if(isManager){
-                totalItem = buildingRepository.getTotalItems(getBuildingBuilder(modelSearch)).intValue();
-            }else {
-                totalItem = (int) buildingRepository.getTotalItemsByStaffs_id(getBuildingBuilder(modelSearch),userId);
-            }
-        }
+        modelSearch.setUserId(userId);
+        totalItem = buildingRepository.getTotalItems(getBuildingBuilder(modelSearch),true).intValue();
         return totalItem;
     }
+
 
     void getUserAndRole(){
         userId = SecurityUtils.getPrincipal().getId();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         isManager = authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals("MANAGER"));
-}
+    }
 
 
     private void saveImage(BuildingDTO buildingDTO){

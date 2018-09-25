@@ -26,10 +26,9 @@ public class CustomerController {
                                  HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/customer/list");
         DisplayTagUtils.initSearchBean(request,model);
-        Pageable pageable = new PageRequest(model.getPage() - 1, model.getMaxPageItems());
-        List<CustomerDTO> customerDTOS = customerService.getCustomer(model.getSearchValue(),pageable);
+        List<CustomerDTO> customerDTOS = customerService.searchCustomersAssignment(model);
         model.setListResult(customerDTOS);
-        model.setTotalItems(customerService.getTotalItem(model.getSearchValue()));
+        model.setTotalItems(customerService.getTotalItemsAssignment(model));
         initMessageResponse(mav, request);
         mav.addObject(SystemConstant.MODEL, model);
         return mav;

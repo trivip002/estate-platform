@@ -5,6 +5,7 @@ import com.estate.converter.CustomerServiceConverter;
 import com.estate.dto.CustomerDTO;
 import com.estate.entity.CustomerEntity;
 import com.estate.entity.UserEntity;
+import com.estate.paging.PageRequest;
 import com.estate.repository.CustomerRepository;
 import com.estate.repository.UserRepository;
 import com.estate.service.ICustomerService;
@@ -43,25 +44,29 @@ public class CustomerService implements ICustomerService {
     private boolean isManager;
 
 
-    @Override
-    public List<CustomerDTO> getCustomer(String searchValue, Pageable pageable) {
-        List<CustomerDTO> result = new ArrayList<>();
-        getUserAndRole();
-        Page<CustomerEntity> customerPage = null;
-        if (searchValue != null) {
-            //usersPage = userRepository.findByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue, pageable);
-        } else {
-            if (isManager) { // manager
-                customerPage = customerRepository.findAll(pageable);
 
-            } else {// user
-                customerPage = customerRepository.findByUsers_id(pageable, userId);
-            }
+
+    @Override
+    public List<CustomerDTO> searchCustomersAssignment(CustomerDTO modelSearch) {
+        getUserAndRole();
+        com.estate.paging.Pageable pageableCustom = new PageRequest(modelSearch.getPage(), modelSearch.getMaxPageItems());
+        List<?> customerEntities = null;
+        List<CustomerDTO> result = new ArrayList<>();
+        if(!isManager){
+            modelSearch.setStaffName(userRepository.findOne(userId).getUserName());
         }
-        for (CustomerEntity item : customerPage.getContent()) {
-            CustomerDTO customerDTO = customerConverter.convertToDto(item);
+        customerEntities = customerRepository.findAll(modelSearch, pageableCustom);
+        for (Object item : customerEntities) {
+            CustomerEntity customerEntity = new CustomerEntity();
+            try {
+                customerEntity = (CustomerEntity)item;
+            }catch (Exception e){
+                customerEntity = (CustomerEntity)((Object[])item)[0];
+            }
+            CustomerDTO customerDTO = customerConverter.convertToDto(customerEntity);
             result.add(customerDTO);
         }
+
         return result;
     }
 
@@ -106,20 +111,16 @@ public class CustomerService implements ICustomerService {
         return customerConverter.convertToDto(oldCustomer);
     }
 
+
+
     @Override
-    public int getTotalItem(String searchValue) {
+    public int getTotalItemsAssignment(CustomerDTO modelSearch) {
         int totalItem = 0;
         getUserAndRole();
-        if (searchValue != null) {
-            //usersPage = userRepository.findByUserNameOrFullNameOrPhoneOrEmailContainingIgnoreCase(searchValue, searchValue, searchValue, searchValue, pageable);
-        } else {
-            if (isManager) { // manager
-                totalItem = (int) customerRepository.count();
-
-            } else {// user
-                totalItem = (int) customerRepository.countByUsers_id(userId);
-            }
+        if(!isManager){
+            modelSearch.setStaffName(userRepository.findOne(userId).getUserName());
         }
+        totalItem = customerRepository.getTotalItems(modelSearch).intValue();
         return totalItem;
     }
 

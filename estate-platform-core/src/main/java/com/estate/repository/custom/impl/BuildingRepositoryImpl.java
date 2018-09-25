@@ -27,13 +27,16 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<BuildingEntity> findAll(BuildingBuilder buildingBuilder, Pageable pageable) {
+    public List<?> findAll(BuildingBuilder buildingBuilder, Pageable pageable,boolean priority) {
         StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be");
-        sql.append(" WHERE 1=1 ");
+        if(priority){
+            sql.append(" JOIN be.staffsPrioritize sp ");
+        }
         if (StringUtils.isNotBlank(buildingBuilder.getStaffName())) {
             sql.append(" JOIN be.staffs s ");
         }
-        sql = buildQuery(sql, buildingBuilder);
+        sql.append(" WHERE 1=1 ");
+        sql = buildQuery(sql, buildingBuilder,priority);
         Query query = entityManager.createQuery(sql.toString());
         query.setFirstResult(pageable.getOffset());
         query.setMaxResults(pageable.getLimit());
@@ -41,40 +44,23 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     }
 
     @Override
-    public Long getTotalItems(BuildingBuilder buildingBuilder) {
+    public Long getTotalItems(BuildingBuilder buildingBuilder, boolean priority) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM BuildingEntity AS be");
-        sql.append(" WHERE 1=1 ");
+        if(priority){
+            sql.append(" JOIN be.staffsPrioritize sp ");
+        }
         if (StringUtils.isNotBlank(buildingBuilder.getStaffName())) {
             sql.append(" JOIN be.staffs s ");
         }
-        sql = buildQuery(sql, buildingBuilder);
+        sql.append(" WHERE 1=1 ");
+        sql = buildQuery(sql, buildingBuilder,priority);
         Query query = entityManager.createQuery(sql.toString());
         return (Long) query.getSingleResult();
     }
 
-    @Override
-    public List<BuildingEntity> findByStaffs_id(BuildingBuilder buildingBuilder, Pageable pageable, long userId) {
-        StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be,staff_building AS sb");
-        sql.append(" WHERE 1=1 ");
-        sql = buildQuery(sql, buildingBuilder);
-        sql.append("AND be.id = sb.building_id AND sb.staff_id = '"+userId+"'");
-        Query query = entityManager.createQuery(sql.toString());
-        query.setFirstResult(pageable.getOffset());
-        query.setMaxResults(pageable.getLimit());
-        return query.getResultList();
-    }
 
-    @Override
-    public Integer getTotalItemsByStaffs_id(BuildingBuilder buildingBuilder,long userId) {
-        StringBuilder sql = new StringBuilder("FROM BuildingEntity AS be,staff_building AS sb");
-        sql.append(" WHERE 1=1 ");
-        sql = buildQuery(sql, buildingBuilder);
-        sql.append("AND be.id = sb.building_id AND sb.staff_id = '"+userId+"'");
-        Query query = entityManager.createQuery(sql.toString());
-        return query.getResultList().size();
-}
 
-    private StringBuilder buildQuery(StringBuilder sql, BuildingBuilder buildingBuilder) {
+    private StringBuilder buildQuery(StringBuilder sql, BuildingBuilder buildingBuilder,boolean priority) {
         Field[] fields = BuildingBuilder.class.getDeclaredFields();
         for (Field field: fields) {
             if (!field.getName().equals("staffName") && !field.getName().startsWith("area") && !field.getName().startsWith("price")) {
@@ -107,11 +93,14 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
         if (buildingBuilder.getTypeArrays().length > 0) {
             sql.append(" AND (").append("be.types LIKE '%"+buildingBuilder.getTypeArrays()[0]+"%'");
             Arrays.stream(buildingBuilder.getTypeArrays()).filter(item -> !item.equals(buildingBuilder.getTypeArrays()[0]))
-                    .forEach(item -> sql.append(" OR (be.types LIKE '%"+item+"%' "));
+                    .forEach(item -> sql.append(" OR be.types LIKE '%"+item+"%' "));
             sql.append(")");
         }
         if (StringUtils.isNotBlank(buildingBuilder.getStaffName())) {
             sql.append(" AND s.userName = '"+buildingBuilder.getStaffName()+"'");
+        }
+        if(priority){
+            sql.append(" AND sp.id = '"+buildingBuilder.getUserId()+"'");
         }
         return sql;
     }

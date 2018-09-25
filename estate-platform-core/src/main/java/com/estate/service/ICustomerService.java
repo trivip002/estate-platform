@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ICustomerService {
-    List<CustomerDTO> getCustomer(String searchValue, Pageable pageable);
+
+    List<CustomerDTO> searchCustomersAssignment(CustomerDTO model);
 
     CustomerDTO findOneById(long id);
 
@@ -18,7 +19,8 @@ public interface ICustomerService {
 
     CustomerDTO updateStatus(CustomerDTO customerDTO, long id);
 
-    int getTotalItem(String searchValue);
+
+    int getTotalItemsAssignment(CustomerDTO model);
 
     void deleteCustomer(long[] ids);
 

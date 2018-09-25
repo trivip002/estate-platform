@@ -50,15 +50,15 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private int prioritize = 0;
     private List<UserDTO> userAssignment;
     private String staffName;
-    private int search = 0;
+    private Long userId;
 
 
-    public int getSearch() {
-        return search;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setSearch(int search) {
-        this.search = search;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getStaffName() {

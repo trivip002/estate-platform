@@ -15,6 +15,15 @@ public class CustomerDTO extends AbstractDTO {
     private String note;
     private List<UserDTO> users;
     private List<CustomerServiceDTO> careDetail;
+    private String staffName;
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
 
     public String getName() {
         return name;
