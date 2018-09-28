@@ -78,18 +78,10 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
                 }
             }
         }
-        if (buildingBuilder.getAreaFrom() != null) {
-            sql.append(" AND be.rentArea >= "+buildingBuilder.getAreaFrom()+"");
-        }
-        if (buildingBuilder.getAreaTo() != null) {
-            sql.append(" AND be.rentArea <= "+buildingBuilder.getAreaTo()+"");
-        }
-        if (buildingBuilder.getPriceFrom() != null) {
-            sql.append(" AND be.price >= "+buildingBuilder.getPriceFrom()+"");
-        }
-        if (buildingBuilder.getPriceTo() != null) {
-            sql.append(" AND be.price <= "+buildingBuilder.getPriceTo()+"");
-        }
+        Optional.ofNullable(buildingBuilder.getAreaFrom()).map(item -> sql.append(" AND be.rentArea >= "+buildingBuilder.getAreaFrom()+"")).orElse(sql.append(""));
+        Optional.ofNullable(buildingBuilder.getAreaTo()).map(item -> sql.append(" AND be.rentArea <= "+buildingBuilder.getAreaTo()+"")).orElse(sql.append(""));
+        Optional.ofNullable(buildingBuilder.getPriceFrom()).map(item -> sql.append(" AND be.price >= "+buildingBuilder.getPriceFrom()+"")).orElse(sql.append(""));
+        Optional.ofNullable(buildingBuilder.getPriceTo()).map(item -> sql.append(" AND be.price <= "+buildingBuilder.getPriceTo()+"")).orElse(sql.append(""));
         if (buildingBuilder.getTypeArrays().length > 0) {
             sql.append(" AND (").append("be.types LIKE '%"+buildingBuilder.getTypeArrays()[0]+"%'");
             Arrays.stream(buildingBuilder.getTypeArrays()).filter(item -> !item.equals(buildingBuilder.getTypeArrays()[0]))

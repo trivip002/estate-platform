@@ -16,6 +16,7 @@ public class UserDTO extends AbstractDTO<UserDTO> {
     private List<RoleDTO> roleList;
     private Map<String, String> roles;
     private List<BuildingDTO> buildings;
+    private String checked;
 
     public String getUserName() {
         return userName;
@@ -90,5 +91,11 @@ public class UserDTO extends AbstractDTO<UserDTO> {
         this.buildings = buildings;
     }
 
+    public String getChecked() {
+        return checked != null ? checked : "";
+    }
 
+    public void setChecked(String checked) {
+        this.checked = checked;
+    }
 }

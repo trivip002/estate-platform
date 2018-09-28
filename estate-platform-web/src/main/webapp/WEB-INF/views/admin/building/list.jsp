@@ -3,6 +3,7 @@
 <%@include file="/common/taglib.jsp"%>
 <c:url var="formUrl" value="/admin/building/list"/>
 <c:url var="API" value="/api/admin/building"/>
+<c:url var="loadUser" value="/api/admin/user"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -255,8 +256,10 @@
                                     <a class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip"
                                        title="Chi tiết tòa nhà" href='<c:url value="/admin/building/detail/${tableList.id}"/>'><i class="fa fa-external-link" aria-hidden="true"></i></a>
                                     <security:authorize access="hasRole('MANAGER')">
-                                        <a class="btn btn-sm btn-primary btn-edit" data-toggle="modal" data-target ="#exampleModal" data ="${tableList.id}" id="${tableList.id}"
-                                           title="Giao cho user quản lý" href='<c:url value="#"/>'><i class="fa fa-users" aria-hidden="true"></i></a>
+                                        <button type="button" class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip"
+                                                title="Giao tòa nhà cho nhân viên" id="btnAssignBuilding" buildingId="${tableList.id}">
+                                            <i class="fa fa-users" aria-hidden="true"></i>
+                                        </button>
                                     </security:authorize>
                                 </display:column>
                             </display:table>
@@ -271,41 +274,37 @@
 <input type="hidden" value="<%=SecurityUtils.getPrincipal().getId()%>" id="userId">
 <security:authorize access="hasRole('MANAGER')">
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="assignBuildingModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Giao cho user</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
                 </div>
                 <div class="modal-body">
-                    <span>Mã tòa nhà: ${tableList.id}</span>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">Danh sách user đã được giao</label>
-                        <div class="col-sm-9">
-                            <ul style="list-style-type:square">
-                                    <%--<c:forEach var = "i" items="${model.listResult.get(0).userAssignment}">--%>
-                                    <%--<li>${i.userName}</li>--%>
-                                    <%--</c:forEach>--%>
-
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right">Nhập username</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="userName">
-                        </div>
+                    <table class="table" id="userAssignTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Chọn nhân viên
+                                </th>
+                                <th>
+                                    Họ và tên
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div id="fieldHidden">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnAdd">Add</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id ="btnSave">Lưu</button>
+                    <button type="button" class="btn btn-default" id="btnAssignBuildingForUser">Giao tòa nhà cho nhân viên</button>
                 </div>
             </div>
+
         </div>
     </div>
 </security:authorize>
@@ -313,8 +312,26 @@
 <script type="text/javascript">
     var users = "";
     $(document).ready(function () {
-
+        $('#tableList #btnAssignBuilding').click(function (e) {
+            e.preventDefault();
+            openModelAssignBuilding();
+            loadUserAssignBuilding($(this).attr('buildingId'));
+        });
     });
+
+    $('#btnAssignBuildingForUser').click(function (e) {
+        e.preventDefault();
+        var buildingId = $('#fieldHidden').find('#buildingId').val();
+        var users = $('#userAssignTable').find('tbody input[type=checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        assignUser(buildingId, users);
+    });
+
+    function assignUser(buildingId, users) {
+        console.log(buildingId);
+        console.log(users);
+    }
 
     $('#btnSearch').click(function () {
         $('#listForm').submit();
@@ -397,6 +414,32 @@
                 return $(this).val();
             }).get();
             deleteBuilding(dataArray);
+        });
+    }
+
+    function openModelAssignBuilding() {
+        $('#assignBuildingModal').modal();
+    }
+
+    function loadUserAssignBuilding(buildingId) {
+        var buildingIdHidden = '<input type="hidden" name="buildingId" value=' + buildingId + ' id="buildingId"></input>';
+        $('#fieldHidden').html(buildingIdHidden);
+        $.ajax({
+            url: '${loadUser}?role=USER&buildingid='+buildingId,
+            type: 'GET',
+            success: function(res) {
+                var row = '';
+                $.each(res, function (index,user) {
+                    row += '<tr>';
+                    row += '<td class="text-center"><input type="checkbox" name="checkList" value="'+user.id+'" id="" class="check-box-element" ' + user.checked + '/></td>';
+                    row += '<td class="text-center">' +user.fullName+ '</td>';
+                    row += '</tr>';
+                });
+                $('#userAssignTable tbody').html(row);
+            },
+            error: function(res) {
+                console.log(res);
+            }
         });
     }
 </script>
