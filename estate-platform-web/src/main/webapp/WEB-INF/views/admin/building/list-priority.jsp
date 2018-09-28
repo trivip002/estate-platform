@@ -127,18 +127,18 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="fg-line">
-                                                        <input type="number" name="costFrom"
+                                                        <input type="number" name="priceFrom"
                                                                class="form-control input-sm"
                                                                value="${model.priceFrom}"
-                                                               placeholder="Gía thuê từ" id="costFrom"/>
+                                                               placeholder="Gía thuê từ" id="priceFrom"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="fg-line">
-                                                        <input type="number" name="costTo"
+                                                        <input type="number" name="priceTo"
                                                                class="form-control input-sm"
                                                                value="${model.priceTo}"
-                                                               placeholder="Gía thuê đến" id="costTo"/>
+                                                               placeholder="Gía thuê đến" id="priceTo"/>
                                                     </div>
                                                 </div>
                                             </div>
