@@ -223,11 +223,11 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public void assignBuildingToStaff(String[] users, long id) {
+    public void assignBuildingToStaff(Long[] userId, long id) {
         BuildingEntity building = buildingRepository.findOne(id);
         List<UserEntity> userEntities = new ArrayList<>();
-        for (String item: users) {
-            userEntities.add(userRepository.findOneByUserName(item));
+        for (Long item: userId) {
+            userEntities.add(userRepository.findOne(item));
         }
         building.setStaffs(userEntities);
         buildingRepository.save(building);

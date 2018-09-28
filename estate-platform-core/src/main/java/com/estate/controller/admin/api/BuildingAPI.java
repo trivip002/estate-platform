@@ -36,8 +36,8 @@ public class BuildingAPI {
     }
 
     @PostMapping("/{id}/users")
-    public ResponseEntity<Void> assignBuildingToStaff(@RequestBody String[] users, @PathVariable("id") long id) {
-        buildingService.assignBuildingToStaff(users, id);
+    public ResponseEntity<Void> assignBuildingToStaff(@RequestBody Long[] userId, @PathVariable("id") long id) {
+        buildingService.assignBuildingToStaff(userId, id);
         return ResponseEntity.noContent().build();
     }
 

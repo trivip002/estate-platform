@@ -310,7 +310,7 @@
 </security:authorize>
 </div>
 <script type="text/javascript">
-    var users = "";
+
     $(document).ready(function () {
         $('#tableList #btnAssignBuilding').click(function (e) {
             e.preventDefault();
@@ -325,13 +325,9 @@
         var users = $('#userAssignTable').find('tbody input[type=checkbox]:checked').map(function () {
             return $(this).val();
         }).get();
-        assignUser(buildingId, users);
+        updateBuilding(users, buildingId);
     });
 
-    function assignUser(buildingId, users) {
-        console.log(buildingId);
-        console.log(users);
-    }
 
     $('#btnSearch').click(function () {
         $('#listForm').submit();
@@ -345,17 +341,6 @@
         updatePrioritize(action,buildingId);
     });
 
-    $('#btnAdd').click(function (event) {
-        event.preventDefault();
-        users += ($('#userName').val()+",");
-    });
-
-    $('#btnSave').click(function (event) {
-        event.preventDefault();
-        //var id = $('#tableList.id')
-        var users = ["nguyenvanb"];
-        updateBuilding(users, 5);
-    });
 
     function updateBuilding(data, id) {
         $.ajax({
