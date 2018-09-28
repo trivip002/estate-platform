@@ -1,5 +1,6 @@
 package com.estate.service.impl;
 
+import com.estate.builder.UserBuilder;
 import com.estate.constant.SystemConstant;
 import com.estate.controller.utils.RandomGenerator;
 import com.estate.controller.utils.Md5Utils;
@@ -12,6 +13,7 @@ import com.estate.repository.RoleRepository;
 import com.estate.repository.UserRepository;
 import com.estate.service.IRoleService;
 import com.estate.service.IUserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.estate.exception.MyException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService {
@@ -71,6 +71,21 @@ public class UserService implements IUserService {
             }
         }
         return result;
+    }
+
+    @Override
+    public List<UserDTO> getUsers(UserBuilder userBuilder) {
+        if (StringUtils.isNotBlank(userBuilder.getRole()) && userBuilder.getBuildingId() != null) {
+            return userRepository.findByStatusAndRoleList_Code(1, userBuilder.getRole())
+                    .stream().map(item -> {
+                        UserDTO userDTO = userConverter.convertToDto(item);
+                        if (userRepository.existsByIdAndBuildings_Id(item.getId(), userBuilder.getBuildingId())) {
+                            userDTO.setChecked("checked");
+                        }
+                        return userDTO;
+                    }).collect(Collectors.toList());
+        }
+        return null;
     }
 
     @Override

@@ -1,11 +1,14 @@
 package com.estate.controller.admin.api;
 
+import com.estate.builder.UserBuilder;
 import com.estate.dto.UserDTO;
 import com.estate.exception.MyException;
 import com.estate.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/admin/user")
@@ -45,5 +48,13 @@ public class UserAPI{
             return ResponseEntity.ok(userDTO);
         }
 
-
+        @GetMapping
+        public ResponseEntity<List<UserDTO>> loadUser(@RequestParam(value = "role", required = false) String role,
+                                                      @RequestParam(value = "buildingid", required = false) Long buildingId) {
+            UserBuilder builder = new UserBuilder.Builder()
+                    .setRole(role)
+                    .setBuildingId(buildingId)
+                    .build();
+            return ResponseEntity.ok(userService.getUsers(builder));
+        }
 }
