@@ -37,8 +37,8 @@ public class CustomerAPI {
     }
 
     @PostMapping("/{id}/users")
-    public ResponseEntity<Void> assignCustomerToStaff(@RequestBody String[] users, @PathVariable("id") long id) {
-        customerService.assignCustomerToStaff(users, id);
+    public ResponseEntity<Void> assignCustomerToStaff(@RequestBody Long[] usersId, @PathVariable("id") long id) {
+        customerService.assignCustomerToStaff(usersId, id);
         return ResponseEntity.noContent().build();
     }
 

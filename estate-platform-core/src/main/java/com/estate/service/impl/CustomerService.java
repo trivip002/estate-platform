@@ -140,11 +140,11 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void assignCustomerToStaff(String[] users, long id) {
+    public void assignCustomerToStaff(Long[] usersId, long id) {
         CustomerEntity customer = customerRepository.findOne(id);
         List<UserEntity> userEntities = new ArrayList<>();
-        for (String item: users) {
-            userEntities.add(userRepository.findOneByUserName(item));
+        for (Long item: usersId) {
+            userEntities.add(userRepository.findOne(item));
         }
         customer.setUsers(userEntities);
         customerRepository.save(customer);

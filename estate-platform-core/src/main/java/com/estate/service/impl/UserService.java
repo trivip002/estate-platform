@@ -84,6 +84,15 @@ public class UserService implements IUserService {
                         }
                         return userDTO;
                     }).collect(Collectors.toList());
+        }else if(StringUtils.isNotBlank(userBuilder.getRole()) && userBuilder.getCustomerId() != null){
+            return userRepository.findByStatusAndRoleList_Code(1, userBuilder.getRole())
+                    .stream().map(item -> {
+                        UserDTO userDTO = userConverter.convertToDto(item);
+                        if (userRepository.existsByIdAndCustomers_Id(item.getId(), userBuilder.getCustomerId())) {
+                            userDTO.setChecked("checked");
+                        }
+                        return userDTO;
+                    }).collect(Collectors.toList());
         }
         return null;
     }

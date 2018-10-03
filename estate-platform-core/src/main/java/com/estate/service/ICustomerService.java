@@ -24,7 +24,7 @@ public interface ICustomerService {
 
     void deleteCustomer(long[] ids);
 
-    void assignCustomerToStaff(String[] users, long id);
+    void assignCustomerToStaff(Long[] users, long id);
 
 }
    

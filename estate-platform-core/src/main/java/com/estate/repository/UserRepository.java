@@ -21,6 +21,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>,UserRepo
     List<UserEntity> findByBuildings_Id(long buildingId);
     boolean existsByIdAndBuildingsPrioritize_Id(long userId, long buildingId);
     boolean existsByIdAndBuildings_Id(long userId, long buildingId);
+    boolean existsByIdAndCustomers_Id(long userId, long customerId);
     List<UserEntity> findByRoleList_id(long roleId);
     List<UserEntity> findByStatusAndRoleList_Code(Integer status, String role);
 }

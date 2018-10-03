@@ -50,10 +50,12 @@ public class UserAPI{
 
         @GetMapping
         public ResponseEntity<List<UserDTO>> loadUser(@RequestParam(value = "role", required = false) String role,
-                                                      @RequestParam(value = "buildingid", required = false) Long buildingId) {
+                                                      @RequestParam(value = "buildingid", required = false) Long buildingId,
+                                                      @RequestParam(value = "customerid", required = false) Long customerid) {
             UserBuilder builder = new UserBuilder.Builder()
                     .setRole(role)
                     .setBuildingId(buildingId)
+                    .setCustomerId(customerid)
                     .build();
             return ResponseEntity.ok(userService.getUsers(builder));
         }

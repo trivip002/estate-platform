@@ -219,7 +219,9 @@
                             <div class="col-sm-9">
                                 <%--<form:checkbox path="option" value="0" cssClass="form-control"  /><span class="option">Thuê nguyên căn</span>--%>
                                 <%--<form:checkbox path="option"  value="1" cssClass="form-control" /><span class="option">Tầng trệt</span>--%><%--<form:checkbox path="option"  value="2" cssClass="form-control"  /><span class="option">Nội thất</span>--%>
-                                    <form:checkboxes items="${mapTypes}"  path="typeArrays"  class="option"/>
+                                    <form:checkboxes items="${mapTypes}"  path="typeArrays"  class="option" id="typeArrays"/>
+                            </div>
+                            <div id="fieldHidden">
                             </div>
                         </div>
                         <br/>
@@ -277,61 +279,45 @@
 </div>
 <script>
     var check_valdidate;
+    var typeArrays;
     $(document).ready(function () {
+        check_valdidate = false;
+        typeArrays = true;
+        $("#formEdit").validate({
+            rules: {
+                "district": { // <-- assign by field name and use quotes
+                    required: true,
+                },
+                "uploadImage": { // <-- assign by field name and use quotes
+                    required: true,
+                },
+                "typeArrays": { // <-- assign by field name and use quotes
+                    required: true,
+                }
 
+            },
+            messages: {
+                "district":{
+                    required:"Please choose a district"
+                },
+                "uploadImage":{
+                    required:"Please choose a Image"
+                },
+                "typeArrays":{
+                    //required:"Please choose at least a option",
+                }
 
-        // check_valdidate = false;
-        // $("#formEdit").validate({
-        //     rules: {
-        //         "roleCode": { // <-- assign by field name and use quotes
-        //             required: true,
-        //         },
-        //         "userName": { // <-- assign by field name and use quotes
-        //             required: true,
-        //             minlength: 6,
-        //             maxlength: 40
-        //         },
-        //         "email": {
-        //             required: true,  // <-- this rule was misspelled 'equired'
-        //             email:true
-        //         },
-        //         "phone": {
-        //             required: true,
-        //         },
-        //         "fullName": {
-        //             required: true,  // <-- this rule was misspelled 'equired'
-        //             minlength: 6,
-        //             maxlength: 40
-        //         },
-        //     },
-        //     messages: {
-        //         "roleCode":{
-        //             required:"Please choose a role"
-        //         },
-        //         "userName": {
-        //             required: "username is required!",
-        //             minlength: "username must be at least 6 characters long"
-        //         },
-        //         "email": {
-        //             required: "Please enter a email",
-        //             email:"Email is not valid"
-        //         },
-        //         "phone": {
-        //             required: "Please enter a phone number",
-        //
-        //
-        //         },
-        //         "fullName": {
-        //             required: "Please enter a fullname",
-        //             minlength: "Name must be at least 6 characters long"
-        //         },
-        //     },
-        //     submitHandler: function(form)
-        //     {
-        //         check_valdidate = true;
-        //     }
-        //
-        // });
+            },
+            submitHandler: function(form)
+            {
+                check_valdidate = true;
+            }
+
+        });
+        if(!typeArrays){
+            var buildingIdHidden = ' <label id="typeArrays-error" class="error" for="typeArrays">Please choose a option</label>';
+            $('#fieldHidden').html(buildingIdHidden);
+        }
 
     });
 
@@ -359,19 +345,23 @@
             updateBuilding(dataArray, id);
         }
         else {
-            dataArray["imageName"] = files.name;
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                dataArray["avatarBase64"] = e.target.result;
-                if (id == "") {
-                    addBuilding(dataArray);
-                } else {
-                    dataArray["createdBy"] = $("#createdBy").val();
-                    dataArray["createdDate"] = $("#createdDate").val();
-                    updateBuilding(dataArray, id);
+            $('#formEdit').submit();
+            if(check_valdidate && files != undefined){
+                dataArray["imageName"] = files.name;
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    dataArray["avatarBase64"] = e.target.result;
+                    if (id == "") {
+                        addBuilding(dataArray);
+                    } else {
+                        dataArray["createdBy"] = $("#createdBy").val();
+                        dataArray["createdDate"] = $("#createdDate").val();
+                        updateBuilding(dataArray, id);
+                    }
                 }
+                reader.readAsDataURL(files);
             }
-            reader.readAsDataURL(files);
+
         }
 
 
